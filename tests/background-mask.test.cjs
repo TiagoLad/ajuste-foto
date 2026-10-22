@@ -10,7 +10,7 @@ const context = {};
 vm.createContext(context);
 vm.runInContext(script.slice(
   script.indexOf('function getBackgroundMaskTensor'),
-  script.indexOf('async function createWhiteBackgroundVersion'),
+  script.indexOf('function shouldUseLightweightBackground'),
 ), context);
 
 function prediction(values, type = 'float32') {

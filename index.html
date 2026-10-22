@@ -102,7 +102,7 @@ button[hidden]{display:none}
         <button id="minus" disabled>− Zoom</button>
         <button id="plus" disabled>+ Zoom</button>
       </div>
-      <div class="notice">Remoção de fundo com BiRefNet. No primeiro uso, o download do modelo pode demorar. Confira o contorno antes de baixar.</div>
+      <div class="notice">Remoção automática de fundo. No primeiro uso, aguarde o download dos recursos. Confira o contorno antes de baixar.</div>
     </div></section>
 
     <aside aria-label="Resultado e download">
@@ -469,8 +469,115 @@ async function inferBackground(engine,raw){
   }
 }
 
+function shouldUseLightweightBackground(){
+  return useNativeCamera() || navigator.userAgentData?.mobile===true
+    || (navigator.deviceMemory>0 && navigator.deviceMemory<=4);
+}
+
+// Keep the smaller portrait model in its own worker. A failed WASM instance
+// can be terminated and recreated without poisoning the page's runtime.
+function portraitWorkerMain(){
+  let segmenterPromise=null;
+  self.onmessage=async({data:request})=>{
+    const {id,width,height,pixels}=request;
+    const report=message=>self.postMessage({id,kind:'progress',message});
+    try{
+      segmenterPromise ??= (async()=>{
+        const runtime=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js');
+        runtime.env.allowLocalModels=false;
+        runtime.env.backends.onnx.wasm.numThreads=1;
+        runtime.env.backends.onnx.wasm.proxy=false;
+        let lastPercent=-1;
+        const segmenter=await runtime.pipeline('background-removal','Xenova/modnet',{
+          device:'wasm',dtype:'fp32',
+          progress_callback:event=>{
+            if(event.status==='progress' && event.file?.endsWith('.onnx') && Number.isFinite(event.progress)){
+              const percent=Math.floor(event.progress);
+              if(percent!==lastPercent){lastPercent=percent;report(`Baixando recursos para celular: ${percent}%. Aguarde…`);}
+            }
+          }
+        });
+        return {runtime,segmenter};
+      })();
+      const {runtime,segmenter}=await segmenterPromise;
+      report('Aplicando o fundo branco com o modelo para celular. Aguarde…');
+      const image=new runtime.RawImage(new Uint8ClampedArray(pixels),width,height,4);
+      const results=await segmenter(image);
+      const result=results[0];
+      if(!result || result.channels!==4 || result.width!==width || result.height!==height){
+        throw new Error('O modelo não retornou um retrato válido.');
+      }
+      let peak=0;
+      for(let i=3;i<result.data.length;i+=4)peak=Math.max(peak,result.data[i]);
+      if(peak<230)throw new Error('Não foi possível identificar a pessoa. Tente uma foto mais iluminada.');
+      const output=new Uint8ClampedArray(result.data);
+      self.postMessage({id,kind:'done',width,height,pixels:output.buffer},[output.buffer]);
+    }catch(error){
+      segmenterPromise=null;
+      self.postMessage({id,kind:'error',message:error.message || String(error)});
+    }
+  };
+}
+
+let portraitWorker=null,portraitWorkerUrl=null,portraitRequestId=0;
+function resetPortraitWorker(){
+  portraitWorker?.terminate();portraitWorker=null;
+  if(portraitWorkerUrl)URL.revokeObjectURL(portraitWorkerUrl);
+  portraitWorkerUrl=null;
+}
+window.addEventListener('pagehide',resetPortraitWorker);
+
+async function createMobileWhiteBackground(image,report){
+  report('Preparando a remoção de fundo para celular. Aguarde…');
+  if(!portraitWorker){
+    portraitWorkerUrl=URL.createObjectURL(new Blob(['('+portraitWorkerMain.toString()+')();'],{type:'text/javascript'}));
+    try{portraitWorker=new Worker(portraitWorkerUrl,{type:'module'});}
+    catch(error){resetPortraitWorker();throw new Error('Não foi possível iniciar o processamento. Atualize a página e tente novamente.');}
+  }
+  const canvas=document.createElement('canvas');
+  canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;
+  const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+  const input=ctx.getImageData(0,0,canvas.width,canvas.height);
+  const worker=portraitWorker,id=++portraitRequestId;
+  const output=await new Promise((resolve,reject)=>{
+    let timer;
+    const cleanup=()=>{
+      clearTimeout(timer);worker.removeEventListener('message',onMessage);
+      worker.removeEventListener('error',onError);worker.removeEventListener('messageerror',onError);
+    };
+    const fail=error=>{cleanup();resetPortraitWorker();reject(error);};
+    const onError=event=>fail(new Error(event.message || 'Não foi possível iniciar o processamento no celular.'));
+    const onMessage=({data})=>{
+      if(data.id!==id)return;
+      if(data.kind==='progress'){report(data.message);return;}
+      if(data.kind==='error'){
+        const message=/aborted|memory|allocation/i.test(data.message)
+          ? 'O celular ficou sem memória para processar a foto. Feche outras abas e tente novamente.'
+          : data.message;
+        fail(new Error(message));return;
+      }
+      if(data.kind==='done'){cleanup();resolve(data);}
+    };
+    worker.addEventListener('message',onMessage);worker.addEventListener('error',onError);
+    worker.addEventListener('messageerror',onError);
+    timer=setTimeout(()=>fail(new Error('O processamento demorou demais. Verifique a conexão e tente novamente.')),180000);
+    try{worker.postMessage({id,width:canvas.width,height:canvas.height,pixels:input.data.buffer},[input.data.buffer]);}
+    catch(error){fail(error);}
+  });
+  ctx.putImageData(new ImageData(new Uint8ClampedArray(output.pixels),output.width,output.height),0,0);
+  ctx.globalCompositeOperation='destination-over';
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.globalCompositeOperation='source-over';
+  return canvas;
+}
+
 async function createWhiteBackgroundVersion(image,onProgress=()=>{}){
   if(backgroundCache.has(image)) return backgroundCache.get(image);
+  if(shouldUseLightweightBackground()){
+    const out=await createMobileWhiteBackground(image,onProgress);
+    backgroundCache.set(image,out);
+    return out;
+  }
   bgProgress=onProgress;
   try{
     let engine=await loadBgApi();
@@ -570,7 +677,7 @@ async function applyBackgroundOnly(){
   if(!originalImg || bgBusy) return;
   const token=++loadToken,img=originalImg;
   setBackgroundBusy(true);
-  setStatus('Preparando remoção de fundo com BiRefNet…');
+  setStatus('Preparando a remoção de fundo. Aguarde…');
   try{
     const out=await createWhiteBackgroundVersion(img,message=>{
       if(token===loadToken && img===originalImg)setStatus(message);
@@ -579,7 +686,7 @@ async function applyBackgroundOnly(){
     processedCanvas=out;
     // Preserve the crop and zoom selected by the user.
     paint();schedule();
-    setStatus('Fundo branco aplicado com BiRefNet. Confira o contorno antes de baixar.');
+    setStatus('Fundo branco aplicado. Confira o contorno antes de baixar.');
   }catch(e){
     console.warn(e);
     if(token===loadToken)setStatus('Não foi possível aplicar o fundo branco: '+(e.message || String(e))+'. Sua foto continua disponível para ajuste manual.');
