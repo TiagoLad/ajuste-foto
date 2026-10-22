@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ajustador de Foto 3×4 com Fundo Branco</title>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#182536;background:#f3f6fa}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 15px}
+.wrap{max-width:1040px;margin:auto}
+h1{margin:0 0 9px;font-size:26px}
+.muted{color:#586778;line-height:1.5}
+.panel{background:#fff;border:1px solid #e1e7ef;border-radius:16px;padding:22px;margin-top:20px;box-shadow:0 6px 25px #1420380b}
+.cols{display:grid;grid-template-columns:1fr 320px;gap:28px}
+label{display:block;font-weight:650;margin:15px 0 8px}
+.upload{border:2px dashed #b8c8dc;border-radius:12px;padding:18px;background:#f8fbff;width:100%}
+.canvaswrap{display:flex;justify-content:center;background:#e8eef5;border-radius:12px;padding:18px;overflow:hidden}
+.canvaswrap canvas{width:min(100%,360px);aspect-ratio:3/4;touch-action:none;cursor:grab;box-shadow:0 4px 16px #0002;background:#fff}
+.canvaswrap canvas:active{cursor:grabbing}
+input[type=range]{width:100%}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{padding:12px 16px;border:0;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;background:#e8eef5;color:#17304d}
+button.primary{background:#1765d1;color:white}
+button:disabled{opacity:.45;cursor:not-allowed}
+.info{font-size:13px;color:#526274;line-height:1.55}
+.status{margin-top:12px;font-size:14px;font-weight:600;min-height:42px;line-height:1.45}
+.preview{width:180px;max-width:100%;border:1px solid #d0d9e4;border-radius:5px;aspect-ratio:3/4;object-fit:contain;background:#fff}
+.small{font-size:13px}
+.pill{display:inline-block;background:#eaf4ee;color:#17683e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;margin-right:6px;margin-bottom:6px}
+.notice{background:#fff8dc;border:1px solid #f0df95;color:#6a5900;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px}
+@media(max-width:700px){.cols{grid-template-columns:1fr}.panel{padding:16px}body{padding:16px 10px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Ajustador de Foto 3×4 com Fundo Branco</h1>
+  <p class="muted">Ferramenta simples para preparar foto de cadastro: detecta o rosto, tenta remover o fundo e substituí-lo por branco, enquadra automaticamente em 3×4 e exporta em JPG. Tudo é processado no navegador.</p>
+
+  <div class="panel cols">
+    <section>
+      <label for="file">1. Escolha sua foto</label>
+      <input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*">
+      <p class="info">Use preferencialmente uma foto recente, com o usuário de frente e o rosto em primeiro plano. A ferramenta tenta automatizar o processo, mas você ainda pode ajustar manualmente o enquadramento.</p>
+
+      <label for="zoom">2. Ajuste fino do enquadramento — zoom <span id="zoomval">100%</span></label>
+      <input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled>
+      <p class="info">Após o processamento automático, você pode arrastar a foto e ajustar o zoom. O resultado final sempre é mantido em proporção 3×4.</p>
+
+      <div class="canvaswrap">
+        <canvas id="editor" width="600" height="800" aria-label="Prévia do recorte 3 por 4"></canvas>
+      </div>
+
+      <div class="actions">
+        <button id="auto" disabled>Processar automaticamente</button>
+        <button id="bg" disabled>Aplicar fundo branco</button>
+        <button id="reset" disabled>Centralizar imagem</button>
+        <button id="minus" disabled>− Zoom</button>
+        <button id="plus" disabled>+ Zoom</button>
+      </div>
+      <div class="notice">Se a remoção de fundo ou a detecção facial falharem, a ferramenta continua funcionando com enquadramento centralizado e ajuste manual.</div>
+    </section>
+
+    <aside>
+      <label>3. Confira o resultado</label>
+      <img class="preview" id="preview" alt="Prévia da foto ajustada">
+      <p class="info"><span class="pill">Saída em JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
+      <p class="info" id="details">600 × 800 pixels · proporção 3×4</p>
+
+      <label for="quality">Qualidade do JPG: <span id="qval">90%</span></label>
+      <input id="quality" type="range" min="50" max="100" value="90" step="5" disabled>
+      <p class="info">Se necessário, o arquivo é comprimido automaticamente para ficar abaixo de 3 MB.</p>
+
+      <button class="primary" style="width:100%;margin-top:15px" id="download" disabled>Baixar foto 3×4 (JPG)</button>
+      <p id="status" class="status" aria-live="polite">Selecione uma imagem para começar.</p>
+    </aside>
+  </div>
+
+  <div class="panel">
+    <strong>Requisitos informados pelo sistema</strong>
+    <p class="small muted">Foto recente; usuário de frente com o rosto em primeiro plano; fundo branco ou neutro; arquivo JPG/JPEG com tamanho máximo de 3 MB; enquadramento 3×4. Sempre confira visualmente o resultado final antes de enviar.</p>
+  </div>
+</main>
+
+<script>
+const file=document.querySelector('#file');
+const canvas=document.querySelector('#editor');
+const ctx=canvas.getContext('2d');
+const zoom=document.querySelector('#zoom');
+const quality=document.querySelector('#quality');
+const preview=document.querySelector('#preview');
+const statusEl=document.querySelector('#status');
+const details=document.querySelector('#details');
+const zoomVal=document.querySelector('#zoomval');
+const qVal=document.querySelector('#qval');
+const W=600,H=800;
+
+let originalImg=null;
+let processedCanvas=null;
+let scale=1,minScale=1,dx=0,dy=0,drag=null,renderToken=0,loadToken=0;
+let faceLibPromise=null,bgLibPromise=null;
+
+function currentSource(){ return processedCanvas || originalImg; }
+
+function setStatus(msg){ statusEl.textContent=msg; }
+
+function paint(){
+  ctx.fillStyle='#fff';
+  ctx.fillRect(0,0,W,H);
+  const src=currentSource();
+  if(!src){
+    ctx.fillStyle='#65778b';
+    ctx.textAlign='center';
+    ctx.font='20px sans-serif';
+    ctx.fillText('Sua foto aparecerá aqui',W/2,H/2);
+    return;
+  }
+  const sw=src.width || src.naturalWidth;
+  const sh=src.height || src.naturalHeight;
+  ctx.drawImage(src,dx,dy,sw*scale,sh*scale);
+}
+
+function constrain(){
+  const src=currentSource();
+  if(!src) return;
+  const sw=(src.width || src.naturalWidth)*scale;
+  const sh=(src.height || src.naturalHeight)*scale;
+  dx=Math.min(0,Math.max(W-sw,dx));
+  dy=Math.min(0,Math.max(H-sh,dy));
+}
+
+function recenter(){
+  const src=currentSource();
+  if(!src) return;
+  const sw=src.width || src.naturalWidth;
+  const sh=src.height || src.naturalHeight;
+  minScale=Math.max(W/sw,H/sh);
+  scale=minScale*(+zoom.value/100);
+  dx=(W-sw*scale)/2;
+  dy=(H-sh*scale)/2;
+  paint();
+  schedule();
+}
+
+function setZoom(v){
+  const src=currentSource();
+  if(!src) return;
+  const old=scale;
+  zoom.value=Math.min(350,Math.max(100,v));
+  scale=minScale*(+zoom.value/100);
+  dx=W/2-(W/2-dx)*(scale/old);
+  dy=H/2-(H/2-dy)*(scale/old);
+  constrain();
+  zoomVal.textContent=zoom.value+'%';
+  paint();
+  schedule();
+}
+
+function fitFace(box){
+  const src=currentSource() || originalImg;
+  if(!src) return;
+  const sw=src.width || src.naturalWidth;
+  const sh=src.height || src.naturalHeight;
+  const bw=Math.max(1,box.width), bh=Math.max(1,box.height);
+  const faceScale=Math.min(W/(bw*2.35),H/(bh*3.25));
+  minScale=Math.max(W/sw,H/sh);
+  const targetScale=Math.max(minScale,faceScale);
+  scale=Math.min(minScale*3.5,targetScale);
+  zoom.value=Math.round(Math.min(350,Math.max(100,100*scale/minScale)));
+  scale=minScale*(+zoom.value/100);
+  dx=W*.5-(box.x+bw*.5)*scale;
+  dy=H*.36-(box.y+bh*.5)*scale;
+  constrain();
+  paint();
+  zoomVal.textContent=zoom.value+'%';
+  schedule();
+}
+
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src=src;
+    s.onload=resolve;
+    s.onerror=()=>reject(new Error('Falha ao carregar '+src));
+    document.head.appendChild(s);
+  });
+}
+
+function loadFaceApi(){
+  if(faceLibPromise) return faceLibPromise;
+  faceLibPromise=(async()=>{
+    if('FaceDetector' in window) return 'native';
+    if(!window.FaceDetection){
+      await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js');
+    }
+    return 'mediapipe';
+  })().catch(err=>{faceLibPromise=null; throw err;});
+  return faceLibPromise;
+}
+
+function loadBgApi(){
+  if(bgLibPromise) return bgLibPromise;
+  bgLibPromise=(async()=>{
+    if(!window.SelfieSegmentation){
+      await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js');
+    }
+    return 'mediapipe';
+  })().catch(err=>{bgLibPromise=null; throw err;});
+  return bgLibPromise;
+}
+
+async function findFace(image){
+  await loadFaceApi();
+  if('FaceDetector' in window){
+    try{
+      const d=new window.FaceDetector({fastMode:true,maxDetectedFaces:5});
+      const faces=await d.detect(image);
+      if(faces.length){
+        const b=faces.sort((a,b)=>b.boundingBox.width*b.boundingBox.height-a.boundingBox.width*a.boundingBox.height)[0].boundingBox;
+        return {x:b.x,y:b.y,width:b.width,height:b.height};
+      }
+    }catch(e){}
+  }
+  const Detection=window.FaceDetection;
+  if(!Detection) return null;
+  const det=new Detection({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/'+f});
+  det.setOptions({model:'short',minDetectionConfidence:.5});
+  let result=null;
+  det.onResults(r=>{
+    const boxes=(r.detections||[]).map(d=>d.boundingBox).filter(Boolean);
+    boxes.sort((a,b)=>b.width*b.height-a.width*a.height);
+    if(boxes.length){
+      const b=boxes[0], w=image.naturalWidth, h=image.naturalHeight;
+      result={x:(b.xCenter-b.width/2)*w, y:(b.yCenter-b.height/2)*h, width:b.width*w, height:b.height*h};
+    }
+  });
+  try{ await det.send({image}); return result; }
+  finally{ if(det.close) await det.close(); }
+}
+
+async function createWhiteBackgroundVersion(image){
+  await loadBgApi();
+  const Seg=window.SelfieSegmentation;
+  if(!Seg) throw new Error('Biblioteca de segmentação indisponível');
+  const seg=new Seg({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/'+f});
+  seg.setOptions({modelSelection:1});
+  const out=document.createElement('canvas');
+  out.width=image.naturalWidth;
+  out.height=image.naturalHeight;
+  const octx=out.getContext('2d');
+  let done=false;
+  seg.onResults(results=>{
+    try{
+      octx.save();
+      octx.clearRect(0,0,out.width,out.height);
+      octx.drawImage(results.segmentationMask,0,0,out.width,out.height);
+      octx.globalCompositeOperation='source-in';
+      octx.drawImage(image,0,0,out.width,out.height);
+      octx.globalCompositeOperation='destination-over';
+      octx.fillStyle='#fff';
+      octx.fillRect(0,0,out.width,out.height);
+      octx.restore();
+      done=true;
+    }catch(e){ console.error(e); }
+  });
+  try{
+    await seg.send({image});
+    if(!done) throw new Error('Segmentação não retornou resultado');
+    return out;
+  } finally {
+    if(seg.close) await seg.close();
+  }
+}
+
+async function autoProcess(){
+  if(!originalImg) return;
+  const token=++loadToken;
+  const img=originalImg;
+  let faceBox=null;
+  let bgApplied=false;
+  setStatus('Processando automaticamente: detectando rosto e tentando aplicar fundo branco...');
+
+  try{
+    faceBox=await findFace(img);
+    if(token!==loadToken || img!==originalImg) return;
+  }catch(e){ console.warn('Falha na detecção facial:', e); }
+
+  try{
+    processedCanvas=await createWhiteBackgroundVersion(img);
+    bgApplied=true;
+    if(token!==loadToken || img!==originalImg) return;
+  }catch(e){
+    processedCanvas=null;
+    console.warn('Falha na remoção de fundo:', e);
+  }
+
+  const src=currentSource();
+  if(!src) return;
+  zoom.value=100;
+  zoomVal.textContent='100%';
+  recenter();
+  if(faceBox){
+    fitFace(faceBox);
+  }
+
+  const msgs=[];
+  if(faceBox) msgs.push('rosto centralizado automaticamente');
+  else msgs.push('rosto não detectado, imagem centralizada');
+  if(bgApplied) msgs.push('fundo branco aplicado');
+  else msgs.push('fundo branco não pôde ser aplicado');
+  setStatus('Processamento concluído: '+msgs.join(' · ')+'. Confira a prévia e ajuste se necessário.');
+}
+
+async function applyBackgroundOnly(){
+  if(!originalImg) return;
+  const token=++loadToken;
+  setStatus('Aplicando fundo branco...');
+  try{
+    const out=await createWhiteBackgroundVersion(originalImg);
+    if(token!==loadToken) return;
+    processedCanvas=out;
+    recenter();
+    setStatus('Fundo branco aplicado com sucesso.');
+  }catch(e){
+    console.warn(e);
+    setStatus('Não foi possível aplicar o fundo branco automaticamente.');
+  }
+}
+
+function blobJpeg(q){ return new Promise(res=>canvas.toBlob(res,'image/jpeg',q)); }
+
+async function exportBlob(){
+  let q=+quality.value/100;
+  let b=await blobJpeg(q);
+  while(b && b.size>3*1024*1024 && q>0.4){
+    q=Math.max(.4,q-.05);
+    b=await blobJpeg(q);
+  }
+  return b;
+}
+
+function schedule(){
+  let t=++renderToken;
+  const src=currentSource();
+  if(!src) return;
+  setTimeout(async()=>{
+    const b=await exportBlob();
+    if(t!==renderToken || !b) return;
+    if(preview.dataset.url) URL.revokeObjectURL(preview.dataset.url);
+    const u=URL.createObjectURL(b);
+    preview.dataset.url=u;
+    preview.src=u;
+    details.textContent=`600 × 800 pixels · JPG · ${(b.size/1024).toFixed(0)} KB`;
+  },100);
+}
+
+file.addEventListener('change',()=>{
+  const f=file.files?.[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')){ setStatus('Escolha um arquivo de imagem.'); return; }
+  const url=URL.createObjectURL(f);
+  const i=new Image();
+  i.onload=()=>{
+    originalImg=i;
+    processedCanvas=null;
+    zoom.disabled=quality.disabled=false;
+    ['auto','bg','reset','minus','plus','download'].forEach(id=>document.getElementById(id).disabled=false);
+    zoom.value=100;
+    zoomVal.textContent='100%';
+    qVal.textContent=quality.value+'%';
+    recenter();
+    setStatus('Imagem carregada. Iniciando processamento automático...');
+    autoProcess();
+    URL.revokeObjectURL(url);
+  };
+  i.onerror=()=>{ setStatus('Não foi possível abrir esta imagem.'); URL.revokeObjectURL(url); };
+  i.src=url;
+});
+
+zoom.addEventListener('input',()=>setZoom(+zoom.value));
+quality.addEventListener('input',()=>{ qVal.textContent=quality.value+'%'; schedule(); });
+document.querySelector('#auto').onclick=autoProcess;
+document.querySelector('#bg').onclick=applyBackgroundOnly;
+document.querySelector('#reset').onclick=()=>{ zoom.value=100; zoomVal.textContent='100%'; recenter(); setStatus('Imagem centralizada.'); };
+document.querySelector('#minus').onclick=()=>setZoom(+zoom.value-10);
+document.querySelector('#plus').onclick=()=>setZoom(+zoom.value+10);
+
+canvas.addEventListener('pointerdown',e=>{
+  if(!currentSource()) return;
+  canvas.setPointerCapture(e.pointerId);
+  drag={x:e.clientX,y:e.clientY,dx,dy};
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  const rect=canvas.getBoundingClientRect();
+  dx=drag.dx+(e.clientX-drag.x)*W/rect.width;
+  dy=drag.dy+(e.clientY-drag.y)*H/rect.height;
+  constrain();
+  paint();
+  schedule();
+});
+canvas.addEventListener('pointerup',()=>drag=null);
+canvas.addEventListener('pointercancel',()=>drag=null);
+
+document.querySelector('#download').onclick=async()=>{
+  if(!currentSource()) return;
+  setStatus('Preparando arquivo...');
+  const b=await exportBlob();
+  if(!b){ setStatus('Erro ao gerar JPG.'); return; }
+  if(b.size>3*1024*1024){ setStatus('Arquivo acima de 3 MB: diminua a qualidade.'); return; }
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a');
+  a.href=u;
+  a.download='foto-3x4.jpg';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),5000);
+  setStatus('Foto JPG pronta para envio.');
+};
+
+paint();
+</script>
+</body>
+</html>
