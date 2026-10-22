@@ -2,47 +2,76 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ajustador de Foto 3×4 com Fundo Branco</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Foto pronta · Ajustador 3×4</title>
 <style>
-:root{font-family:Inter,system-ui,Arial,sans-serif;color:#182536;background:#f3f6fa}
-*{box-sizing:border-box}
-body{margin:0;padding:28px 15px}
-.wrap{max-width:1040px;margin:auto}
-h1{margin:0 0 9px;font-size:26px}
-.muted{color:#586778;line-height:1.5}
-.panel{background:#fff;border:1px solid #e1e7ef;border-radius:16px;padding:22px;margin-top:20px;box-shadow:0 6px 25px #1420380b}
-.cols{display:grid;grid-template-columns:1fr 320px;gap:28px}
-label{display:block;font-weight:650;margin:15px 0 8px}
-.upload{border:2px dashed #b8c8dc;border-radius:12px;padding:18px;background:#f8fbff;width:100%}
-.canvaswrap{display:flex;justify-content:center;background:#e8eef5;border-radius:12px;padding:18px;overflow:hidden}
-.canvaswrap canvas{width:min(100%,360px);aspect-ratio:3/4;touch-action:none;cursor:grab;box-shadow:0 4px 16px #0002;background:#fff}
-.canvaswrap canvas:active{cursor:grabbing}
-input[type=range]{width:100%}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-button{padding:12px 16px;border:0;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;background:#e8eef5;color:#17304d}
-button.primary{background:#1765d1;color:white}
-button:disabled{opacity:.45;cursor:not-allowed}
-.info{font-size:13px;color:#526274;line-height:1.55}
-.status{margin-top:12px;font-size:14px;font-weight:600;min-height:42px;line-height:1.45}
-.preview{width:180px;max-width:100%;border:1px solid #d0d9e4;border-radius:5px;aspect-ratio:3/4;object-fit:contain;background:#fff}
-.small{font-size:13px}
-.pill{display:inline-block;background:#eaf4ee;color:#17683e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;margin-right:6px;margin-bottom:6px}
-.camera-area{margin:12px 0;padding:12px;background:#f0f5fb;border:1px solid #cbd9eb;border-radius:12px}.camera-area video{display:block;width:100%;max-height:420px;object-fit:contain;background:#17212f;border-radius:9px;transform:scaleX(-1)}.camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.camera-area[hidden]{display:none}.notice{background:#fff8dc;border:1px solid #f0df95;color:#6a5900;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px}
-@media(max-width:700px){.cols{grid-template-columns:1fr}.panel{padding:16px}body{padding:16px 10px}}
+:root{font-family:"Segoe UI",Inter,system-ui,sans-serif;color:#00264c;background:#f2f6fa;--green:#005284;--line:#d7e2ec;--muted:#5d7184}
+*{box-sizing:border-box}body{margin:0;padding:0 24px 28px}body:before{content:'foto pronta.';display:block;border-bottom:1px solid var(--line);padding:21px max(0px,calc((100% - 1160px)/2));font-size:23px;font-weight:750;color:var(--green);letter-spacing:-1px;margin:0 -24px 36px;background:#ffffffb3}.wrap{max-width:1160px;margin:auto}h1{font-size:clamp(27px,3.4vw,40px);font-weight:650;letter-spacing:-1.4px;margin:0 0 12px;line-height:1.2}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:750;color:var(--green);margin:0 0 12px}.muted{color:var(--muted);line-height:1.75;font-size:14px;max-width:760px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;margin-top:28px;box-shadow:0 6px 25px #00264c05}.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:0;padding:0;overflow:hidden}.cols>section{padding:26px;min-width:0}.cols>aside{padding:26px;background:#f8fafd;border-left:1px solid var(--line);min-width:0}label{display:block;font-weight:650;font-size:13px;margin:0 0 13px}label[for=zoom]{margin-top:27px;padding-top:22px;border-top:1px solid var(--line)}.upload{border:1.5px dashed #a8c4da;border-radius:12px;padding:20px;background:#f1f7fc;width:100%;font-size:12px;color:#5d7184;cursor:pointer}.upload::file-selector-button{background:var(--green);color:#fff;border:0;border-radius:7px;padding:11px 14px;margin-right:14px;font-weight:600;cursor:pointer}.canvaswrap{display:flex;justify-content:center;background:#eaf1f7;background-image:radial-gradient(#cad8e5 .8px,transparent .8px);background-size:12px 12px;border-radius:12px;padding:24px;overflow:hidden;margin-top:20px}.canvaswrap canvas{display:block;width:min(100%,270px);height:auto;aspect-ratio:3/4;touch-action:none;cursor:grab;box-shadow:0 8px 28px #00264c1c;background:#fff;border-radius:2px}.canvaswrap canvas:active{cursor:grabbing}input[type=range]{width:100%;accent-color:var(--green);cursor:pointer;height:18px}input:disabled{cursor:not-allowed;opacity:.5}#zoomval,#qval{display:inline-block;color:var(--green);background:#e8f1f8;border-radius:5px;padding:3px 7px;font-size:11px;margin-left:5px;font-variant-numeric:tabular-nums}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button{padding:11px 14px;border:1px solid var(--line);border-radius:8px;font:600 12px "Segoe UI",system-ui,sans-serif;cursor:pointer;background:#fff;color:#1d4d7a;transition:background .18s,transform .18s}button:enabled:hover{background:#e7f0f8}button:enabled:active{transform:translateY(1px)}button.primary{background:var(--green);border-color:var(--green);color:white}button.primary:enabled:hover{background:#00264c}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #75a9cf;outline-offset:4px}.info{font-size:11px;color:var(--muted);line-height:1.75}.status{margin:16px 0 0;font-size:11px;font-weight:500;min-height:42px;line-height:1.7;padding:12px;background:#e8f1f8;border-radius:8px;color:#1d4d7a;overflow-wrap:anywhere}.preview-stage{display:flex;justify-content:center;padding:23px;background:#eaf1f7;border-radius:12px;margin:19px 0 14px}.preview-frame{position:relative;width:156px;aspect-ratio:3/4;background:#fff;box-shadow:0 4px 15px #00264c14}.preview{display:block;width:100%;height:100%;position:relative;z-index:1;object-fit:contain;background:#fff}.preview:not([src]){visibility:hidden}.preview-placeholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#8ea9bf;font-size:11px;gap:10px}.preview-placeholder span{font-size:29px;font-weight:300}.small{font-size:12px}.pill{display:inline-block;background:#e8f1f8;color:#1d4d7a;border-radius:5px;padding:5px 7px;font-size:9px;font-weight:600;margin-right:4px;margin-bottom:6px}aside>.info:has(.pill){text-align:center}#details{text-align:center;font-size:10px;margin:10px 0 27px}label[for=quality]{font-size:12px}#download{padding:14px 10px;font-size:12px}#auto{background:#e8f1f8;border-color:#cbddea;color:var(--green)}.camera-area{margin:14px 0;padding:12px;background:#eef4fa;border:1px solid var(--line);border-radius:12px}.camera-area video{display:block;width:100%;max-height:420px;object-fit:contain;background:#00264c;border-radius:9px;transform:scaleX(-1)}.camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.camera-area[hidden]{display:none}.notice{background:#eef4fa;border:1px solid #d2e0ec;color:#1d4d7a;border-radius:9px;padding:11px 13px;margin-top:17px;font-size:10px;line-height:1.7}.requirements{margin-top:20px;background:#ffffff80;box-shadow:none;padding:19px 23px}.requirements strong{font-size:12px;font-weight:650}.requirements p{margin:7px 0 0;font-size:11px;max-width:none}.footer{display:flex;justify-content:space-between;gap:16px;color:#667f96;font-size:10px;line-height:1.7;margin-top:22px}.step{display:inline-grid;place-items:center;width:25px;height:25px;margin-right:8px;background:#e8f1f8;color:var(--green);border-radius:50%;font-size:11px;vertical-align:middle}
+@media(min-width:1050px){.cols>section{display:grid;grid-template-columns:235px minmax(0,1fr);column-gap:26px;align-content:start}.source-controls{grid-column:1;grid-row:1/5}.editor-controls{grid-column:2;grid-row:1/5}.editor-controls label[for=zoom]{margin-top:0;padding-top:0;border:0}.canvaswrap{padding:20px}.canvaswrap canvas{width:246px}.editor-controls .actions{display:grid;grid-template-columns:1fr 1fr}.editor-controls #auto{grid-column:1/-1}.editor-controls button{font-size:10px;padding:10px 7px}.source-controls>.info{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.source-controls .upload{padding:22px 13px;min-height:145px}.source-controls .upload::file-selector-button{display:block;margin:0 0 15px;width:100%}.source-controls #openCamera{width:100%}}
+@media(max-width:720px){body{padding:0 16px 20px}body:before{margin:0 -16px 27px;padding:17px 20px;font-size:21px}.cols{grid-template-columns:minmax(0,1fr);margin-top:23px}.cols>section,.cols>aside{padding:20px}.cols>aside{border-left:0;border-top:1px solid var(--line)}h1{letter-spacing:-.8px}.muted{font-size:12px}.preview-frame{width:150px}.preview-stage{max-width:300px;margin:18px auto}.actions button{flex:1 1 auto}.requirements{padding:17px}.footer{flex-direction:column;gap:4px}.upload{padding:15px 10px;font-size:11px}.upload::file-selector-button{padding:10px;margin-right:8px}.canvaswrap canvas{width:240px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+.downloadbar{margin-top:15px}#download{width:100%}.mobile-download-status{display:none}
+@media(max-width:720px){
+  body{padding-bottom:calc(144px + env(safe-area-inset-bottom,0px))}
+  .cols>section,.cols>aside{padding:18px}
+  .muted{font-size:14px;line-height:1.65}
+  label,label[for=quality]{font-size:14px;line-height:1.5}
+  .info{font-size:13px;line-height:1.65}
+  .notice{font-size:12px;line-height:1.6}
+  .status{font-size:13px;line-height:1.6}
+  .requirements strong{font-size:14px}.requirements p{font-size:13px}
+  .footer{font-size:12px}.pill{font-size:11px}
+  #details{font-size:12px}#zoomval,#qval{font-size:12px}
+  button,#download{min-height:48px;font-size:14px;padding:12px;touch-action:manipulation}
+  .source-controls .actions button{width:100%}
+  .editor-controls .actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .editor-controls .actions button{min-width:0;line-height:1.4}
+  .editor-controls #auto{grid-column:1/-1}
+  .camera-actions{gap:10px}.camera-actions button{flex:1 1 120px}
+  .upload{font-size:13px;padding:14px;min-height:112px}
+  .upload::file-selector-button{display:block;width:100%;min-height:48px;margin:0 0 10px;font-size:14px}
+  input[type=range]{height:44px;appearance:none;-webkit-appearance:none;background:transparent;padding:0}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;background:#cbddea;border-radius:6px}
+  input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:26px;height:26px;background:var(--green);border:3px solid #fff;border-radius:50%;margin-top:-10px;box-shadow:0 1px 5px #00264c33}
+  input[type=range]::-moz-range-track{height:6px;background:#cbddea;border-radius:6px}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--green);border:3px solid #fff;border-radius:50%;box-shadow:0 1px 5px #00264c33}
+  .canvaswrap{padding:16px}.canvaswrap canvas{width:min(100%,260px);min-width:0}
+  .downloadbar{position:fixed;z-index:10;bottom:0;left:0;right:0;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px #00264c0c}
+  .mobile-download-status{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin:0 0 7px;font-size:12px;line-height:1.5;color:#1d4d7a;overflow-wrap:anywhere}
+  #download{display:block;margin:0}
+}
+.processing-notice[hidden]{display:none}
+.processing-notice{position:fixed;z-index:30;top:max(16px,env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:540px;display:flex;align-items:flex-start;gap:14px;padding:20px;background:#fff;border:1px solid #a8c4da;border-radius:14px;box-shadow:0 10px 40px #00264c30}
+.processing-content{min-width:0;flex:1}.processing-notice h2{margin:0 0 8px;font-size:16px;line-height:1.4;color:var(--green)}
+.processing-message{margin:0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.processing-help{margin:10px 0 0;font-size:12px;line-height:1.55;color:#1d4d7a}
+.processing-notice progress{display:block;width:100%;height:8px;margin-top:12px;accent-color:var(--green);border:0;border-radius:8px;overflow:hidden}
+.processing-spinner{flex:0 0 23px;width:23px;height:23px;margin-top:2px;border:3px solid #cbddea;border-top-color:var(--green);border-radius:50%;animation:processing-spin 1s linear infinite}
+@keyframes processing-spin{to{transform:rotate(360deg)}}
+@media(max-width:720px){.processing-notice{padding:16px;gap:11px}.processing-notice h2{font-size:15px}.processing-message{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.processing-spinner{animation:none}}
 </style>
 </head>
 <body>
+<section class="processing-notice" id="processingNotice" aria-labelledby="processingTitle" hidden>
+  <span class="processing-spinner" aria-hidden="true"></span>
+  <div class="processing-content">
+    <h2 id="processingTitle">Aguarde, estamos preparando sua foto</h2>
+    <p class="processing-message" id="processingMessage" role="status" aria-live="polite" aria-atomic="true">Iniciando o processamento…</p>
+    <progress id="processingProgress" max="100" aria-label="Preparação da foto"></progress>
+    <p class="processing-help">No primeiro uso, o carregamento pode demorar. Mantenha esta página aberta até a conclusão.</p>
+  </div>
+</section>
 <main class="wrap">
-  <h1>Ajustador de Foto 3×4 com Fundo Branco</h1>
-  <p class="muted">Ferramenta simples para preparar foto de cadastro: detecta o rosto, tenta remover o fundo e substituí-lo por branco, enquadra automaticamente em 3×4 e exporta em JPG. Tudo é processado no navegador.</p>
+  <p class="eyebrow">Sua foto, do jeito certo</p><h1>Uma boa foto. Um cadastro pronto.</h1>
+  <p class="muted">Prepare sua foto 3×4 em poucos passos. Ajuste o enquadramento, aplique o fundo branco e baixe o resultado em JPG. Tudo é processado no seu navegador.</p>
 
   <div class="panel cols">
-    <section>
-      <label for="file">1. Escolha sua foto</label>
+    <section aria-label="Escolha e edição da foto"><div class="source-controls">
+      <label for="file"><span class="step">1</span> Escolha sua foto</label>
       <input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*">
       <div class="actions">
-        <button type="button" id="openCamera">📷 Abrir câmera</button>
+        <button type="button" id="openCamera">◎ &nbsp; Usar a câmera</button>
       </div>
       <div class="camera-area" id="cameraArea" hidden>
         <label for="cameraView">Prévia da câmera</label>
@@ -54,46 +83,46 @@ button:disabled{opacity:.45;cursor:not-allowed}
         </div>
         <p class="info">Permita o acesso à câmera quando solicitado. No celular, use HTTPS; no computador, HTTPS ou localhost.</p>
       </div>
-      <p class="info">Use preferencialmente uma foto recente, com o usuário de frente e o rosto em primeiro plano. A ferramenta tenta automatizar o processo, mas você ainda pode ajustar manualmente o enquadramento.</p>
+      <p class="info">Para um bom resultado, use uma foto recente e bem iluminada. Olhe de frente para a câmera e deixe o rosto em destaque.</p>
 
-      <label for="zoom">2. Ajuste fino do enquadramento — zoom <span id="zoomval">100%</span></label>
+      </div><div class="editor-controls"><label for="zoom"><span class="step">2</span> Enquadramento <span id="zoomval">100%</span></label>
       <input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled>
-      <p class="info">Após o processamento automático, você pode arrastar a foto e ajustar o zoom. O resultado final sempre é mantido em proporção 3×4.</p>
+      <p class="info">Arraste a foto para ajustar a posição e use o zoom para aproximar. A proporção 3×4 é mantida.</p>
 
       <div class="canvaswrap">
         <canvas id="editor" width="600" height="800" aria-label="Prévia do recorte 3 por 4"></canvas>
       </div>
 
       <div class="actions">
-        <button id="auto" disabled>Processar automaticamente</button>
+        <button id="auto" disabled>✧ &nbsp; Ajustar automaticamente</button>
         <button id="bg" disabled>Aplicar fundo branco</button>
         <button id="reset" disabled>Centralizar imagem</button>
         <button id="minus" disabled>− Zoom</button>
         <button id="plus" disabled>+ Zoom</button>
       </div>
-      <div class="notice">Se a remoção de fundo ou a detecção facial falharem, a ferramenta continua funcionando com enquadramento centralizado e ajuste manual.</div>
-    </section>
+      <div class="notice">Remoção de fundo com BiRefNet. No primeiro uso, o download do modelo pode demorar. Confira o contorno antes de baixar.</div>
+    </div></section>
 
-    <aside>
-      <label>3. Confira o resultado</label>
-      <img class="preview" id="preview" alt="Prévia da foto ajustada">
-      <p class="info"><span class="pill">Saída em JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
+    <aside aria-label="Resultado e download">
+      <label><span class="step">3</span> Seu resultado</label>
+      <div class="preview-stage"><div class="preview-frame"><div class="preview-placeholder" aria-hidden="true"><span>3:4</span>Sua foto aqui</div><img class="preview" id="preview" alt="Prévia da foto ajustada"></div></div>
+      <p class="info"><span class="pill">JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
       <p class="info" id="details">600 × 800 pixels · proporção 3×4</p>
 
       <label for="quality">Qualidade do JPG: <span id="qval">90%</span></label>
       <input id="quality" type="range" min="50" max="100" value="90" step="5" disabled>
       <p class="info">Se necessário, o arquivo é comprimido automaticamente para ficar abaixo de 3 MB.</p>
 
-      <button class="primary" style="width:100%;margin-top:15px" id="download" disabled>Baixar foto 3×4 (JPG)</button>
-      <p id="status" class="status" aria-live="polite">Selecione uma imagem para começar.</p>
+      <div class="downloadbar"><p class="mobile-download-status" id="mobileStatus" aria-hidden="true">Selecione uma foto para começar.</p><button class="primary" id="download" disabled>↓ &nbsp; Baixar foto 3×4</button></div>
+      <p id="status" class="status" role="status" aria-live="polite">Selecione uma imagem para começar.</p>
     </aside>
   </div>
 
-  <div class="panel">
-    <strong>Requisitos informados pelo sistema</strong>
+  <div class="panel requirements">
+    <strong>Confira antes de enviar</strong>
     <p class="small muted">Foto recente; usuário de frente com o rosto em primeiro plano; fundo branco ou neutro; arquivo JPG/JPEG com tamanho máximo de 3 MB; enquadramento 3×4. Sempre confira visualmente o resultado final antes de enviar.</p>
   </div>
-</main>
+<footer class="footer"><span>Feito para simplificar sua próxima foto de cadastro.</span><span>Suas fotos são processadas localmente no navegador.</span></footer></main>
 
 <script>
 const file=document.querySelector('#file');
@@ -124,6 +153,7 @@ async function startCamera(){
     });
     cameraStream=stream;
     cameraView.srcObject=stream;
+    cameraView.style.transform=cameraFacing==='user'?'scaleX(-1)':'none';
     await cameraView.play();
     captureButton.disabled=false;
     setStatus('Câmera pronta. Posicione seu rosto e clique em Capturar foto.');
@@ -168,17 +198,32 @@ let faceLibPromise=null,bgLibPromise=null;
 
 function currentSource(){ return processedCanvas || originalImg; }
 
-function setStatus(msg){ statusEl.textContent=msg; }
+function setStatus(msg){
+  statusEl.textContent=msg;
+  document.querySelector('#mobileStatus').textContent=msg;
+  if(bgBusy){
+    document.querySelector('#processingMessage').textContent=msg;
+    const progress=document.querySelector('#processingProgress');
+    const percent=/Baixando[^:]*:\s*(\d+)%/i.exec(msg);
+    if(percent){
+      progress.value=Math.min(100,Math.max(0,Number(percent[1])));
+      progress.setAttribute('aria-label','Download dos recursos para preparar sua foto');
+    }else{
+      progress.removeAttribute('value');
+      progress.setAttribute('aria-label','Preparação da foto em andamento');
+    }
+  }
+}
 
 function paint(){
   ctx.fillStyle='#fff';
   ctx.fillRect(0,0,W,H);
   const src=currentSource();
   if(!src){
-    ctx.fillStyle='#65778b';
+    ctx.fillStyle='#869980';
     ctx.textAlign='center';
-    ctx.font='20px sans-serif';
-    ctx.fillText('Sua foto aparecerá aqui',W/2,H/2);
+    ctx.font='23px system-ui, sans-serif';
+    ctx.fillText('Sua foto começa aqui',W/2,H/2);
     return;
   }
   const sw=src.width || src.naturalWidth;
@@ -264,15 +309,66 @@ function loadFaceApi(){
   return faceLibPromise;
 }
 
+const BG_MODEL='studioludens/birefnet-lite-512';
+let bgRuntimePromise=null,bgForceCpu=false,bgBusy=false;
+let bgProgress=()=>{};
+let backgroundCache=new WeakMap();
+
 function loadBgApi(){
   if(bgLibPromise) return bgLibPromise;
   bgLibPromise=(async()=>{
-    if(!window.SelfieSegmentation){
-      await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js');
+    bgRuntimePromise ??= import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js');
+    const runtime=await bgRuntimePromise;
+    runtime.env.allowLocalModels=false;
+    // This page does not require cross-origin isolation or a threaded server.
+    runtime.env.backends.onnx.wasm.numThreads=1;
+    let device='wasm',dtype='fp32';
+    if(!bgForceCpu && navigator.gpu){
+      try{
+        const adapter=await navigator.gpu.requestAdapter();
+        // The fp16 export produced low-opacity masks on the tested GPU.
+        if(adapter) device='webgpu';
+      }catch(e){ console.info('WebGPU indisponível; usando CPU.',e); }
     }
-    return 'mediapipe';
-  })().catch(err=>{bgLibPromise=null; throw err;});
+    bgProgress('Carregando os recursos para remover o fundo. Aguarde…');
+    let lastPercent=-1;
+    let model;
+    try{
+      model=await runtime.AutoModel.from_pretrained(BG_MODEL,{
+        device,dtype,
+        progress_callback:event=>{
+          if(event.status==='progress' && event.file?.endsWith('.onnx') && Number.isFinite(event.progress)){
+            const percent=Math.floor(event.progress);
+            if(percent!==lastPercent){lastPercent=percent;bgProgress(`Baixando recursos: ${percent}%. Aguarde, sua foto permanece neste dispositivo.`);}
+          }else if(event.status==='done' && event.file?.endsWith('.onnx')){
+            bgProgress('Preparando a remoção de fundo. Aguarde mais um momento…');
+          }
+        }
+      });
+    }catch(error){
+      if(device==='webgpu'){
+        bgForceCpu=true;
+        bgLibPromise=null;
+        bgProgress('A aceleração gráfica falhou. Carregando a versão para CPU…');
+        return loadBgApi();
+      }
+      throw error;
+    }
+    let processor;
+    try{processor=await runtime.AutoProcessor.from_pretrained(BG_MODEL);}
+    catch(error){await model.dispose().catch(()=>{});throw error;}
+    return {runtime,model,processor,device};
+  })().catch(error=>{bgLibPromise=null;bgRuntimePromise=null;throw error;});
   return bgLibPromise;
+}
+
+function setBackgroundBusy(busy){
+  bgBusy=busy;
+  document.querySelector('#processingNotice').hidden=!busy;
+  statusEl.setAttribute('aria-live',busy?'off':'polite');
+  if(busy) setStatus('Aguarde. Estamos preparando os recursos para sua foto…');
+  for(const id of ['auto','bg','download']) document.getElementById(id).disabled=busy || !originalImg;
+  document.querySelector('.editor-controls').setAttribute('aria-busy',String(busy));
 }
 
 async function findFace(image){
@@ -304,61 +400,127 @@ async function findFace(image){
   finally{ if(det.close) await det.close(); }
 }
 
-async function createWhiteBackgroundVersion(image){
-  await loadBgApi();
-  const Seg=window.SelfieSegmentation;
-  if(!Seg) throw new Error('Biblioteca de segmentação indisponível');
-  const seg=new Seg({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/'+f});
-  seg.setOptions({modelSelection:1});
-  const out=document.createElement('canvas');
-  out.width=image.naturalWidth;
-  out.height=image.naturalHeight;
-  const octx=out.getContext('2d');
-  let done=false;
-  seg.onResults(results=>{
-    try{
-      octx.save();
-      octx.clearRect(0,0,out.width,out.height);
-      octx.drawImage(results.segmentationMask,0,0,out.width,out.height);
-      octx.globalCompositeOperation='source-in';
-      octx.drawImage(image,0,0,out.width,out.height);
-      octx.globalCompositeOperation='destination-over';
-      octx.fillStyle='#fff';
-      octx.fillRect(0,0,out.width,out.height);
-      octx.restore();
-      done=true;
-    }catch(e){ console.error(e); }
-  });
+function getBackgroundMaskTensor(prediction){
+  // ONNX exports may name the only mask "output" rather than "logits".
+  const isMask=tensor=>{
+    if(!tensor || !Array.isArray(tensor.dims) || tensor.dims.length<2) return false;
+    const dims=tensor.dims;
+    return dims[dims.length-1]>1 && dims[dims.length-2]>1
+      && dims.slice(0,-2).every(size=>size===1);
+  };
+  if(isMask(prediction.logits)) return prediction.logits;
+  const candidates=Object.values(prediction).filter(isMask);
+  if(candidates.length===1) return candidates[0];
+  const outputs=Object.entries(prediction).map(([name,tensor])=>`${name}: ${tensor?.dims?.join('×') || 'sem dimensões'}`).join(', ');
+  throw new Error('A saída do BiRefNet não contém uma máscara única. '+outputs);
+}
+
+function validateBackgroundPrediction(prediction){
+  const mask=getBackgroundMaskTensor(prediction);
+  if(mask.type!=='float32') throw new Error('A máscara precisa usar precisão completa (float32).');
+  let peak=-Infinity;
+  for(const value of mask.data){
+    if(!Number.isFinite(value)) throw new Error('O modelo retornou uma máscara inválida.');
+    if(value>peak) peak=value;
+  }
+  // A portrait must contain confidently opaque foreground. Reject a washed-out
+  // mask rather than composing a nearly transparent person over white.
+  if(peak<Math.log(9)) throw new Error('O modelo não identificou uma pessoa com confiança suficiente.');
+  return mask;
+}
+
+async function inferBackground(engine,raw){
+  const inputs=await engine.processor(raw);
   try{
-    await seg.send({image});
-    if(!done) throw new Error('Segmentação não retornou resultado');
-    return out;
-  } finally {
-    if(seg.close) await seg.close();
+    const prediction=await engine.model({input_image:inputs.pixel_values});
+    try{validateBackgroundPrediction(prediction);return prediction;}
+    catch(error){
+      for(const tensor of Object.values(prediction)) tensor?.dispose?.();
+      throw error;
+    }
+  }finally{
+    inputs.pixel_values?.dispose?.();
+  }
+}
+
+async function createWhiteBackgroundVersion(image,onProgress=()=>{}){
+  if(backgroundCache.has(image)) return backgroundCache.get(image);
+  bgProgress=onProgress;
+  try{
+    let engine=await loadBgApi();
+    const source=document.createElement('canvas');
+    source.width=image.naturalWidth;source.height=image.naturalHeight;
+    source.getContext('2d').drawImage(image,0,0);
+    const raw=engine.runtime.RawImage.fromCanvas(source).rgb();
+    onProgress('BiRefNet está refinando o cabelo e o contorno. Aguarde…');
+    let prediction;
+    try{
+      prediction=await inferBackground(engine,raw);
+    }catch(error){
+      if(engine.device!=='webgpu') throw error;
+      // GPU initialization can succeed even when inference is unsupported.
+      await engine.model.dispose().catch(()=>{});
+      bgLibPromise=null;bgForceCpu=true;
+      onProgress('A GPU não produziu um recorte confiável. Processando em precisão completa pela CPU…');
+      engine=await loadBgApi();
+      prediction=await inferBackground(engine,raw);
+    }
+    try{
+      const logits=getBackgroundMaskTensor(prediction);
+      const alphaTensor=logits.sigmoid().mul(255).to('uint8');
+      const maskHeight=logits.dims.at(-2),maskWidth=logits.dims.at(-1);
+      const alpha=await new engine.runtime.RawImage(alphaTensor.data,maskWidth,maskHeight,1)
+        .resize(source.width,source.height);
+      if(alpha.channels!==1 || alpha.data.length!==source.width*source.height){
+        throw new Error('Máscara BiRefNet com dimensões inválidas.');
+      }
+      // Apply the model's continuous alpha directly, without blur or thresholds.
+      const pixels=source.getContext('2d').getImageData(0,0,source.width,source.height);
+      for(let i=0;i<alpha.data.length;i++) pixels.data[i*4+3]=alpha.data[i];
+      source.getContext('2d').putImageData(pixels,0,0);
+      const out=document.createElement('canvas');
+      out.width=source.width;out.height=source.height;
+      const outCtx=out.getContext('2d');
+      outCtx.fillStyle='#ffffff';outCtx.fillRect(0,0,out.width,out.height);
+      outCtx.drawImage(source,0,0);
+      backgroundCache.set(image,out);
+      return out;
+    }finally{
+      for(const tensor of Object.values(prediction)) tensor?.dispose?.();
+    }
+  }finally{
+    bgProgress=()=>{};
   }
 }
 
 async function autoProcess(){
-  if(!originalImg) return;
+  if(!originalImg || bgBusy) return;
   const token=++loadToken;
   const img=originalImg;
+  setBackgroundBusy(true);
+  const report=message=>{if(token===loadToken && img===originalImg)setStatus(message);};
   let faceBox=null;
   let bgApplied=false;
   setStatus('Processando automaticamente: detectando rosto e tentando aplicar fundo branco...');
 
   try{
     faceBox=await findFace(img);
-    if(token!==loadToken || img!==originalImg) return;
+    if(token!==loadToken || img!==originalImg){setBackgroundBusy(false);return;}
   }catch(e){ console.warn('Falha na detecção facial:', e); }
 
   try{
-    processedCanvas=await createWhiteBackgroundVersion(img);
-    bgApplied=true;
+    const output=await createWhiteBackgroundVersion(img,report);
     if(token!==loadToken || img!==originalImg) return;
+    processedCanvas=output;
+    bgApplied=true;
   }catch(e){
+    if(token!==loadToken || img!==originalImg) return;
     processedCanvas=null;
     console.warn('Falha na remoção de fundo:', e);
+  }finally{
+    setBackgroundBusy(false);
   }
+  if(token!==loadToken || img!==originalImg) return;
 
   const src=currentSource();
   if(!src) return;
@@ -378,18 +540,24 @@ async function autoProcess(){
 }
 
 async function applyBackgroundOnly(){
-  if(!originalImg) return;
-  const token=++loadToken;
-  setStatus('Aplicando fundo branco...');
+  if(!originalImg || bgBusy) return;
+  const token=++loadToken,img=originalImg;
+  setBackgroundBusy(true);
+  setStatus('Preparando remoção de fundo com BiRefNet…');
   try{
-    const out=await createWhiteBackgroundVersion(originalImg);
-    if(token!==loadToken) return;
+    const out=await createWhiteBackgroundVersion(img,message=>{
+      if(token===loadToken && img===originalImg)setStatus(message);
+    });
+    if(token!==loadToken || img!==originalImg) return;
     processedCanvas=out;
-    recenter();
-    setStatus('Fundo branco aplicado com sucesso.');
+    // Preserve the crop and zoom selected by the user.
+    paint();schedule();
+    setStatus('Fundo branco aplicado com BiRefNet. Confira o contorno antes de baixar.');
   }catch(e){
     console.warn(e);
-    setStatus('Não foi possível aplicar o fundo branco automaticamente.');
+    if(token===loadToken)setStatus('Não foi possível aplicar o fundo branco: '+(e.message || String(e))+'. Sua foto continua disponível para ajuste manual.');
+  }finally{
+    setBackgroundBusy(false);
   }
 }
 
@@ -429,13 +597,14 @@ function loadPhoto(url){
     originalImg=i;
     processedCanvas=null;
     zoom.disabled=quality.disabled=false;
-    ['auto','bg','reset','minus','plus','download'].forEach(id=>document.getElementById(id).disabled=false);
+    ['auto','bg','reset','minus','plus','download'].forEach(id=>document.getElementById(id).disabled=bgBusy && ['auto','bg','download'].includes(id));
     zoom.value=100;
     zoomVal.textContent='100%';
     qVal.textContent=quality.value+'%';
     recenter();
     setStatus('Imagem carregada. Iniciando processamento automático...');
-    autoProcess();
+    if(!bgBusy) autoProcess();
+    else setStatus('Foto carregada. Aguarde o processamento anterior terminar e clique em Aplicar fundo branco.');
   };
   i.onerror=()=>{ URL.revokeObjectURL(url);setStatus('Não foi possível abrir esta imagem.'); };
   i.src=url;
