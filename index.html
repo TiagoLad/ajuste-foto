@@ -28,7 +28,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .preview{width:180px;max-width:100%;border:1px solid #d0d9e4;border-radius:5px;aspect-ratio:3/4;object-fit:contain;background:#fff}
 .small{font-size:13px}
 .pill{display:inline-block;background:#eaf4ee;color:#17683e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;margin-right:6px;margin-bottom:6px}
-.notice{background:#fff8dc;border:1px solid #f0df95;color:#6a5900;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px}
+.camera-area{margin:12px 0;padding:12px;background:#f0f5fb;border:1px solid #cbd9eb;border-radius:12px}.camera-area video{display:block;width:100%;max-height:420px;object-fit:contain;background:#17212f;border-radius:9px;transform:scaleX(-1)}.camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.camera-area[hidden]{display:none}.notice{background:#fff8dc;border:1px solid #f0df95;color:#6a5900;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px}
 @media(max-width:700px){.cols{grid-template-columns:1fr}.panel{padding:16px}body{padding:16px 10px}}
 </style>
 </head>
@@ -41,6 +41,19 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <section>
       <label for="file">1. Escolha sua foto</label>
       <input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*">
+      <div class="actions">
+        <button type="button" id="openCamera">📷 Abrir câmera</button>
+      </div>
+      <div class="camera-area" id="cameraArea" hidden>
+        <label for="cameraView">Prévia da câmera</label>
+        <video id="cameraView" autoplay muted playsinline aria-label="Prévia ao vivo da câmera"></video>
+        <div class="camera-actions">
+          <button type="button" id="capture" class="primary" disabled>Capturar foto</button>
+          <button type="button" id="switchCamera">Alternar câmera</button>
+          <button type="button" id="closeCamera">Fechar câmera</button>
+        </div>
+        <p class="info">Permita o acesso à câmera quando solicitado. No celular, use HTTPS; no computador, HTTPS ou localhost.</p>
+      </div>
       <p class="info">Use preferencialmente uma foto recente, com o usuário de frente e o rosto em primeiro plano. A ferramenta tenta automatizar o processo, mas você ainda pode ajustar manualmente o enquadramento.</p>
 
       <label for="zoom">2. Ajuste fino do enquadramento — zoom <span id="zoomval">100%</span></label>
@@ -84,6 +97,59 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
 <script>
 const file=document.querySelector('#file');
+const cameraArea=document.querySelector('#cameraArea');
+const cameraView=document.querySelector('#cameraView');
+const openCameraButton=document.querySelector('#openCamera');
+const captureButton=document.querySelector('#capture');
+let cameraStream=null, cameraFacing='user';
+function stopCamera(){
+  if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+  cameraView.srcObject=null;
+  cameraArea.hidden=true;
+  captureButton.disabled=true;
+  openCameraButton.disabled=false;
+}
+async function startCamera(){
+  if(!navigator.mediaDevices?.getUserMedia){
+    setStatus('A câmera exige HTTPS ou localhost e um navegador compatível.');
+    return;
+  }
+  stopCamera();
+  cameraArea.hidden=false;
+  openCameraButton.disabled=true;
+  setStatus('Solicitando permissão da câmera...');
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({
+      audio:false, video:{facingMode:{ideal:cameraFacing},width:{ideal:1280},height:{ideal:1600}}
+    });
+    cameraStream=stream;
+    cameraView.srcObject=stream;
+    await cameraView.play();
+    captureButton.disabled=false;
+    setStatus('Câmera pronta. Posicione seu rosto e clique em Capturar foto.');
+  }catch(e){
+    stopCamera();
+    setStatus('Não foi possível abrir a câmera. Confira a permissão no navegador e use HTTPS ou localhost.');
+  }
+}
+openCameraButton.addEventListener('click',startCamera);
+document.querySelector('#closeCamera').addEventListener('click',()=>{stopCamera();setStatus('Câmera fechada.');});
+document.querySelector('#switchCamera').addEventListener('click',()=>{cameraFacing=cameraFacing==='user'?'environment':'user';startCamera();});
+captureButton.addEventListener('click',()=>{
+  if(!cameraStream||!cameraView.videoWidth){setStatus('A câmera ainda não está pronta.');return;}
+  const snap=document.createElement('canvas');
+  snap.width=cameraView.videoWidth;snap.height=cameraView.videoHeight;
+  const sc=snap.getContext('2d');
+  // Espelha a câmera frontal para corresponder à prévia apresentada.
+  if(cameraFacing==='user'){sc.translate(snap.width,0);sc.scale(-1,1);}
+  sc.drawImage(cameraView,0,0,snap.width,snap.height);
+  stopCamera();
+  snap.toBlob(blob=>{
+    if(!blob){setStatus('Não foi possível capturar a foto.');return;}
+    loadPhoto(URL.createObjectURL(blob));
+  },'image/jpeg',0.95);
+});
+window.addEventListener('pagehide',stopCamera);
 const canvas=document.querySelector('#editor');
 const ctx=canvas.getContext('2d');
 const zoom=document.querySelector('#zoom');
@@ -354,13 +420,12 @@ function schedule(){
   },100);
 }
 
-file.addEventListener('change',()=>{
-  const f=file.files?.[0];
-  if(!f) return;
-  if(!f.type.startsWith('image/')){ setStatus('Escolha um arquivo de imagem.'); return; }
-  const url=URL.createObjectURL(f);
+function loadPhoto(url){
+  const token=++loadToken;
   const i=new Image();
   i.onload=()=>{
+    URL.revokeObjectURL(url);
+    if(token!==loadToken)return;
     originalImg=i;
     processedCanvas=null;
     zoom.disabled=quality.disabled=false;
@@ -371,10 +436,16 @@ file.addEventListener('change',()=>{
     recenter();
     setStatus('Imagem carregada. Iniciando processamento automático...');
     autoProcess();
-    URL.revokeObjectURL(url);
   };
-  i.onerror=()=>{ setStatus('Não foi possível abrir esta imagem.'); URL.revokeObjectURL(url); };
+  i.onerror=()=>{ URL.revokeObjectURL(url);setStatus('Não foi possível abrir esta imagem.'); };
   i.src=url;
+}
+file.addEventListener('change',()=>{
+  const f=file.files?.[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')){setStatus('Escolha um arquivo de imagem.');return;}
+  stopCamera();
+  loadPhoto(URL.createObjectURL(f));
 });
 
 zoom.addEventListener('input',()=>setZoom(+zoom.value));
