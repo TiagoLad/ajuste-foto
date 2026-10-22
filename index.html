@@ -5,55 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Foto pronta · Ajustador 3×4</title>
 <style>
-:root{font-family:"Segoe UI",Inter,system-ui,sans-serif;color:#00264c;background:#f2f6fa;--green:#005284;--line:#d7e2ec;--muted:#5d7184}
-*{box-sizing:border-box}body{margin:0;padding:0 24px 28px}body:before{content:'foto pronta.';display:block;border-bottom:1px solid var(--line);padding:21px max(0px,calc((100% - 1160px)/2));font-size:23px;font-weight:750;color:var(--green);letter-spacing:-1px;margin:0 -24px 36px;background:#ffffffb3}.wrap{max-width:1160px;margin:auto}h1{font-size:clamp(27px,3.4vw,40px);font-weight:650;letter-spacing:-1.4px;margin:0 0 12px;line-height:1.2}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:750;color:var(--green);margin:0 0 12px}.muted{color:var(--muted);line-height:1.75;font-size:14px;max-width:760px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;margin-top:28px;box-shadow:0 6px 25px #00264c05}.cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:0;padding:0;overflow:hidden}.cols>section{padding:26px;min-width:0}.cols>aside{padding:26px;background:#f8fafd;border-left:1px solid var(--line);min-width:0}label{display:block;font-weight:650;font-size:13px;margin:0 0 13px}label[for=zoom]{margin-top:27px;padding-top:22px;border-top:1px solid var(--line)}.upload{border:1.5px dashed #a8c4da;border-radius:12px;padding:20px;background:#f1f7fc;width:100%;font-size:12px;color:#5d7184;cursor:pointer}.upload::file-selector-button{background:var(--green);color:#fff;border:0;border-radius:7px;padding:11px 14px;margin-right:14px;font-weight:600;cursor:pointer}.canvaswrap{display:flex;justify-content:center;background:#eaf1f7;background-image:radial-gradient(#cad8e5 .8px,transparent .8px);background-size:12px 12px;border-radius:12px;padding:24px;overflow:hidden;margin-top:20px}.canvaswrap canvas{display:block;width:min(100%,270px);height:auto;aspect-ratio:3/4;touch-action:none;cursor:grab;box-shadow:0 8px 28px #00264c1c;background:#fff;border-radius:2px}.canvaswrap canvas:active{cursor:grabbing}input[type=range]{width:100%;accent-color:var(--green);cursor:pointer;height:18px}input:disabled{cursor:not-allowed;opacity:.5}#zoomval,#qval{display:inline-block;color:var(--green);background:#e8f1f8;border-radius:5px;padding:3px 7px;font-size:11px;margin-left:5px;font-variant-numeric:tabular-nums}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button{padding:11px 14px;border:1px solid var(--line);border-radius:8px;font:600 12px "Segoe UI",system-ui,sans-serif;cursor:pointer;background:#fff;color:#1d4d7a;transition:background .18s,transform .18s}button:enabled:hover{background:#e7f0f8}button:enabled:active{transform:translateY(1px)}button.primary{background:var(--green);border-color:var(--green);color:white}button.primary:enabled:hover{background:#00264c}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #75a9cf;outline-offset:4px}.info{font-size:11px;color:var(--muted);line-height:1.75}.status{margin:16px 0 0;font-size:11px;font-weight:500;min-height:42px;line-height:1.7;padding:12px;background:#e8f1f8;border-radius:8px;color:#1d4d7a;overflow-wrap:anywhere}.preview-stage{display:flex;justify-content:center;padding:23px;background:#eaf1f7;border-radius:12px;margin:19px 0 14px}.preview-frame{position:relative;width:156px;aspect-ratio:3/4;background:#fff;box-shadow:0 4px 15px #00264c14}.preview{display:block;width:100%;height:100%;position:relative;z-index:1;object-fit:contain;background:#fff}.preview:not([src]){visibility:hidden}.preview-placeholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#8ea9bf;font-size:11px;gap:10px}.preview-placeholder span{font-size:29px;font-weight:300}.small{font-size:12px}.pill{display:inline-block;background:#e8f1f8;color:#1d4d7a;border-radius:5px;padding:5px 7px;font-size:9px;font-weight:600;margin-right:4px;margin-bottom:6px}aside>.info:has(.pill){text-align:center}#details{text-align:center;font-size:10px;margin:10px 0 27px}label[for=quality]{font-size:12px}#download{padding:14px 10px;font-size:12px}#auto{background:#e8f1f8;border-color:#cbddea;color:var(--green)}.camera-area{margin:14px 0;padding:12px;background:#eef4fa;border:1px solid var(--line);border-radius:12px}.camera-area video{display:block;width:100%;max-height:420px;object-fit:contain;background:#00264c;border-radius:9px;transform:scaleX(-1)}.camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.camera-area[hidden]{display:none}.notice{background:#eef4fa;border:1px solid #d2e0ec;color:#1d4d7a;border-radius:9px;padding:11px 13px;margin-top:17px;font-size:10px;line-height:1.7}.requirements{margin-top:20px;background:#ffffff80;box-shadow:none;padding:19px 23px}.requirements strong{font-size:12px;font-weight:650}.requirements p{margin:7px 0 0;font-size:11px;max-width:none}.footer{display:flex;justify-content:space-between;gap:16px;color:#667f96;font-size:10px;line-height:1.7;margin-top:22px}.step{display:inline-grid;place-items:center;width:25px;height:25px;margin-right:8px;background:#e8f1f8;color:var(--green);border-radius:50%;font-size:11px;vertical-align:middle}
-@media(min-width:1050px){.cols>section{display:grid;grid-template-columns:235px minmax(0,1fr);column-gap:26px;align-content:start}.source-controls{grid-column:1;grid-row:1/5}.editor-controls{grid-column:2;grid-row:1/5}.editor-controls label[for=zoom]{margin-top:0;padding-top:0;border:0}.canvaswrap{padding:20px}.canvaswrap canvas{width:246px}.editor-controls .actions{display:grid;grid-template-columns:1fr 1fr}.editor-controls #auto{grid-column:1/-1}.editor-controls button{font-size:10px;padding:10px 7px}.source-controls>.info{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.source-controls .upload{padding:22px 13px;min-height:145px}.source-controls .upload::file-selector-button{display:block;margin:0 0 15px;width:100%}.source-controls #openCamera{width:100%}}
-@media(max-width:720px){body{padding:0 16px 20px}body:before{margin:0 -16px 27px;padding:17px 20px;font-size:21px}.cols{grid-template-columns:minmax(0,1fr);margin-top:23px}.cols>section,.cols>aside{padding:20px}.cols>aside{border-left:0;border-top:1px solid var(--line)}h1{letter-spacing:-.8px}.muted{font-size:12px}.preview-frame{width:150px}.preview-stage{max-width:300px;margin:18px auto}.actions button{flex:1 1 auto}.requirements{padding:17px}.footer{flex-direction:column;gap:4px}.upload{padding:15px 10px;font-size:11px}.upload::file-selector-button{padding:10px;margin-right:8px}.canvaswrap canvas{width:240px}}
-@media(prefers-reduced-motion:reduce){button{transition:none}}
-.downloadbar{margin-top:15px}#download{width:100%}.mobile-download-status{display:none}
-@media(max-width:720px){
-  body{padding-bottom:calc(144px + env(safe-area-inset-bottom,0px))}
-  .cols>section,.cols>aside{padding:18px}
-  .muted{font-size:14px;line-height:1.65}
-  label,label[for=quality]{font-size:14px;line-height:1.5}
-  .info{font-size:13px;line-height:1.65}
-  .notice{font-size:12px;line-height:1.6}
-  .status{font-size:13px;line-height:1.6}
-  .requirements strong{font-size:14px}.requirements p{font-size:13px}
-  .footer{font-size:12px}.pill{font-size:11px}
-  #details{font-size:12px}#zoomval,#qval{font-size:12px}
-  button,#download{min-height:48px;font-size:14px;padding:12px;touch-action:manipulation}
-  .source-controls .actions button{width:100%}
-  .editor-controls .actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
-  .editor-controls .actions button{min-width:0;line-height:1.4}
-  .editor-controls #auto{grid-column:1/-1}
-  .camera-actions{gap:10px}.camera-actions button{flex:1 1 120px}
-  .upload{font-size:13px;padding:14px;min-height:112px}
-  .upload::file-selector-button{display:block;width:100%;min-height:48px;margin:0 0 10px;font-size:14px}
-  input[type=range]{height:44px;appearance:none;-webkit-appearance:none;background:transparent;padding:0}
-  input[type=range]::-webkit-slider-runnable-track{height:6px;background:#cbddea;border-radius:6px}
-  input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:26px;height:26px;background:var(--green);border:3px solid #fff;border-radius:50%;margin-top:-10px;box-shadow:0 1px 5px #00264c33}
-  input[type=range]::-moz-range-track{height:6px;background:#cbddea;border-radius:6px}
-  input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--green);border:3px solid #fff;border-radius:50%;box-shadow:0 1px 5px #00264c33}
-  .canvaswrap{padding:16px}.canvaswrap canvas{width:min(100%,260px);min-width:0}
-  .downloadbar{position:fixed;z-index:10;bottom:0;left:0;right:0;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px #00264c0c}
-  .mobile-download-status{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin:0 0 7px;font-size:12px;line-height:1.5;color:#1d4d7a;overflow-wrap:anywhere}
-  #download{display:block;margin:0}
-}
-.processing-notice[hidden]{display:none}
-.processing-notice{position:fixed;z-index:30;top:max(16px,env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:540px;display:flex;align-items:flex-start;gap:14px;padding:20px;background:#fff;border:1px solid #a8c4da;border-radius:14px;box-shadow:0 10px 40px #00264c30}
-.processing-content{min-width:0;flex:1}.processing-notice h2{margin:0 0 8px;font-size:16px;line-height:1.4;color:var(--green)}
-.processing-message{margin:0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
-.processing-help{margin:10px 0 0;font-size:12px;line-height:1.55;color:#1d4d7a}
-.processing-notice progress{display:block;width:100%;height:8px;margin-top:12px;accent-color:var(--green);border:0;border-radius:8px;overflow:hidden}
-.processing-spinner{flex:0 0 23px;width:23px;height:23px;margin-top:2px;border:3px solid #cbddea;border-top-color:var(--green);border-radius:50%;animation:processing-spin 1s linear infinite}
-@keyframes processing-spin{to{transform:rotate(360deg)}}
-@media(max-width:720px){.processing-notice{padding:16px;gap:11px}.processing-notice h2{font-size:15px}.processing-message{font-size:13px}}
-@media(prefers-reduced-motion:reduce){.processing-spinner{animation:none}}
-button[hidden]{display:none}
+:root{font-family:Inter,"Segoe UI",system-ui,sans-serif;color:#15344d;background:#f3f6fa;--green:#005284;--line:#e0e8f0;--muted:#697f91;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;padding:0 28px 28px;background:radial-gradient(ellipse at 80% 0%,#e3edf8 0,transparent 50%),#f3f6fa}button,input{font:inherit}button{cursor:pointer}button[hidden],[hidden]{display:none!important}button:disabled{opacity:.42;cursor:not-allowed}button,input[type=range]{-webkit-tap-highlight-color:transparent}button{transition:background .18s,box-shadow .18s,transform .18s}button:enabled:active{transform:translateY(1px)}button:focus-visible,input:focus-visible,canvas:focus-visible,.upload-drop:focus-within{outline:3px solid #75a9cf;outline-offset:4px}svg{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.site-header{margin:0 -28px;border-bottom:1px solid #dae4ed;background:#ffffffc9}.header-inner{max-width:1220px;margin:auto;min-height:84px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 28px}.brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:750;letter-spacing:-.9px}.brand-mark{display:grid;place-items:center;width:39px;height:44px;background:linear-gradient(145deg,#086da2,#00264c);border-radius:11px;color:#fff;font-size:13px;letter-spacing:-.4px;box-shadow:0 4px 10px #00528420}.brand-dot{color:#3989bc}.privacy-chip{display:flex;align-items:center;gap:8px;font-size:11px;color:#60788c}.privacy-chip svg{width:15px;height:15px;color:#005284}.wrap{max-width:1164px;margin:auto}.hero{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:42px 0 30px}.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:750;color:#397fa8;margin:0 0 13px}h1{margin:0 0 14px;font-size:clamp(30px,3.1vw,42px);font-weight:650;letter-spacing:-1.7px;line-height:1.15}h1 span{color:var(--green)}.muted{font-size:14px;color:var(--muted);line-height:1.75;margin:0;max-width:530px}.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.hero-meta span{font-size:10px;color:#56758e;border:1px solid #d9e5ef;background:#ffffff90;padding:6px 9px;border-radius:6px}.hero-note{display:flex;align-items:center;gap:13px;color:#476a86;font-size:12px;line-height:1.7;flex-shrink:0}.hero-note svg{width:36px;height:36px;padding:8px;box-sizing:content-box;background:#e2ecf6;border:1px solid #d7e3ef;border-radius:16px}.hero-note strong{display:block;font-size:13px;font-weight:600;color:#173f60}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:start}.cols>section{display:grid;grid-template-columns:235px minmax(0,1fr);gap:18px;min-width:0;align-items:start}.source-controls,.editor-controls,.cols>aside{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;min-width:0;box-shadow:0 6px 24px #173f6005}.section-title{font-size:13px;line-height:1.5;font-weight:650;margin:0 0 22px;display:flex;align-items:center;gap:9px;letter-spacing:-.2px}.step{display:inline-grid;place-items:center;width:25px;height:25px;flex-shrink:0;background:#eaf2f9;color:#005284;border:1px solid #dce9f3;border-radius:8px;font-size:10px;font-weight:700}.section-subtitle{font-size:10px;line-height:1.6;color:#8093a3;margin:-12px 0 19px}
+.upload-drop{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:11px;width:100%;min-height:178px;border:1.5px dashed #afc9dd;border-radius:12px;background:linear-gradient(145deg,#f5f9fd,#edf4fa);text-align:center;padding:22px 12px;cursor:pointer}.upload-drop:hover{background:#eaf3fa;border-color:#679dc3}.upload-icon{display:grid;place-items:center;width:42px;height:42px;background:#e3edf7;color:#005284;border-radius:12px}.upload-icon svg{width:22px;height:22px}.upload-drop strong{font-size:12px;font-weight:650}.upload-drop small{font-size:10px;color:#7b91a3}.upload{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.file-name{color:#7b8e9d;font-size:10px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;margin:10px 0 0}.divider{display:flex;align-items:center;gap:10px;color:#92a2af;font-size:10px;margin:20px 0}.divider:before,.divider:after{content:'';height:1px;background:#e6ecf2;flex:1}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #dce5ed;border-radius:9px;padding:11px 13px;background:#fff;color:#2c5575;font-size:11px;font-weight:600;line-height:1.5;min-height:42px}button:enabled:hover{background:#f0f6fb;border-color:#b4cddd}.source-controls .actions{margin:0}.source-controls #openCamera{width:100%;background:#f8fbfe}.source-controls #openCamera:enabled:hover{background:#eaf3fa}button.primary{background:linear-gradient(125deg,#006497,#004676);border-color:transparent;color:#fff;box-shadow:0 4px 10px #00528415}button.primary:enabled:hover{background:linear-gradient(125deg,#005486,#002f56);box-shadow:0 5px 15px #00528425}.tips{border-top:1px solid var(--line);padding-top:19px;margin-top:23px}.tips h3{font-size:11px;font-weight:650;margin:0 0 13px}.tips ul{list-style:none;margin:0;padding:0}.tips li{position:relative;padding:0 0 11px 18px;font-size:10px;line-height:1.65;color:#718799}.tips li:before{content:'✓';position:absolute;left:0;color:#4e87ae}.tips li:last-child{padding-bottom:0}
+.canvaswrap{display:flex;justify-content:center;align-items:center;padding:24px 18px;background-color:#edf3f9;background-image:radial-gradient(#cddbe8 .7px,transparent .7px);background-size:12px 12px;border:1px solid #e4ecf3;border-radius:12px;overflow:hidden}.canvaswrap canvas{display:block;width:min(100%,246px);height:auto;min-width:0;aspect-ratio:3/4;touch-action:none;cursor:grab;background:#fff;border-radius:3px;box-shadow:0 7px 22px #153f6018}.canvaswrap canvas:active{cursor:grabbing}.drag-hint{display:flex;align-items:center;justify-content:center;gap:5px;font-size:10px;color:#8b9dab;margin:13px 0 22px}.drag-hint svg{width:13px;height:13px}.range-label{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;gap:10px;margin:0 0 10px}.range-value,#zoomval,#qval{display:inline-block;font-size:10px;font-weight:650;font-variant-numeric:tabular-nums;color:#005284;background:#edf4fa;border:1px solid #e0ebf4;border-radius:5px;padding:3px 7px}.zoom-row{display:flex;align-items:center;gap:12px}.zoom-row button{width:30px;min-height:30px;height:30px;flex-shrink:0;padding:0;font-size:18px;font-weight:400}input[type=range]{width:100%;min-width:0;height:32px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;accent-color:#005284;cursor:pointer}input[type=range]::-webkit-slider-runnable-track{height:5px;background:#dbe6ef;border-radius:5px}input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:19px;height:19px;border:3px solid #fff;background:#005284;border-radius:50%;margin-top:-7px;box-shadow:0 1px 5px #00264c33}input[type=range]::-moz-range-track{height:5px;background:#dbe6ef;border-radius:5px}input[type=range]::-moz-range-thumb{width:13px;height:13px;border:3px solid #fff;background:#005284;border-radius:50%;box-shadow:0 1px 5px #00264c33}input:disabled{opacity:.5;cursor:not-allowed}.editor-controls .actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding-top:20px;border-top:1px solid var(--line);margin-top:19px;gap:8px}.editor-controls .actions button{min-width:0;font-size:10px;padding:10px 5px;gap:5px}.editor-controls .actions svg{width:14px;height:14px}#auto{grid-column:1/-1;background:#eaf3fa;border-color:#d9e8f4;color:#005284}.notice{font-size:10px;line-height:1.65;color:#698197;background:#f4f8fc;border:1px solid #e5edf5;border-radius:8px;padding:11px;margin-top:14px}.info{font-size:11px;color:var(--muted);line-height:1.7}.preview-stage{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#e7f0f8,#f2f6fb);border:1px solid #e3ebf3;border-radius:12px;padding:24px 16px}.preview-frame{position:relative;width:150px;aspect-ratio:3/4;background:#fff;box-shadow:0 5px 18px #153f6017;border-radius:3px;overflow:hidden}.preview{display:block;position:relative;z-index:1;width:100%;height:100%;object-fit:contain;background:#fff}.preview:not([src]){visibility:hidden}.preview-placeholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#93aabb;font-size:10px;gap:9px}.preview-placeholder span{font-size:27px;letter-spacing:-1px;font-weight:300}.specs{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:15px 0 0}.pill{display:inline-block;padding:4px 6px;font-size:9px;font-weight:600;color:#527a98;background:#edf4fa;border:1px solid #e1ebf4;border-radius:5px}#details{font-size:10px;text-align:center;color:#8b9dab;margin:11px 0 26px;line-height:1.6}.quality-info{font-size:10px;line-height:1.7;color:#8a9aa7;margin:9px 0 21px}.downloadbar{margin-top:18px}#download{width:100%;font-size:11px;min-height:46px}.mobile-download-status{display:none}.status{font-size:10px;line-height:1.7;overflow-wrap:anywhere;color:#64809a;background:#f1f6fb;border:1px solid #e4edf5;border-radius:8px;padding:11px;margin:13px 0 0}.export-note{font-size:9px;display:flex;align-items:center;justify-content:center;gap:5px;color:#8b9eae;margin:13px 0 0}.export-note svg{width:12px;height:12px}
+.camera-area{background:#f0f6fb;border:1px solid #d8e6f1;border-radius:12px;padding:10px;margin:16px 0}.camera-area label{display:block;font-size:11px;margin:0 0 9px;font-weight:600}.camera-area video{display:block;width:100%;max-height:400px;object-fit:contain;background:#00264c;border-radius:8px}.camera-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.camera-actions #capture{grid-column:1/-1}.camera-actions button{font-size:10px;padding:9px 5px;min-height:40px}.camera-area .info{font-size:10px}.requirements{display:flex;align-items:flex-start;gap:13px;background:#ffffffa8;border:1px solid #e0e8f0;border-radius:12px;padding:18px 22px;margin-top:22px}.requirements>svg{color:#6d94b3;margin-top:1px;width:19px;height:19px}.requirements strong{font-size:11px;font-weight:650}.requirements p{font-size:11px;color:#7a8fa0;line-height:1.7;margin:4px 0 0}.footer{display:flex;justify-content:space-between;gap:15px;color:#97a7b4;font-size:10px;line-height:1.7;margin-top:23px}
+.processing-notice{position:fixed;z-index:30;top:max(16px,env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:540px;display:flex;align-items:flex-start;gap:14px;padding:20px;background:#fff;border:1px solid #a8c4da;border-radius:14px;box-shadow:0 10px 40px #00264c30}.processing-content{min-width:0;flex:1}.processing-notice h2{margin:0 0 8px;font-size:16px;line-height:1.4;color:#005284}.processing-message{margin:0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}.processing-help{margin:10px 0 0;font-size:12px;line-height:1.55;color:#52718b}.processing-notice progress{display:block;width:100%;height:8px;margin-top:12px;accent-color:#005284}.processing-spinner{flex:0 0 23px;width:23px;height:23px;margin-top:2px;border:3px solid #d9e6f2;border-top-color:#005284;border-radius:50%;animation:processing-spin 1s linear infinite}@keyframes processing-spin{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.cols>section{grid-template-columns:minmax(0,1fr)}.hero-note{display:none}.source-controls .upload-drop{min-height:150px}.source-controls .tips ul{display:flex;gap:15px;flex-wrap:wrap}.source-controls .tips li{flex:1 1 125px}.cols{grid-template-columns:minmax(0,1fr) 270px}.editor-controls .canvaswrap canvas{width:min(100%,280px)}}
+@media(max-width:760px){body{padding:0 16px calc(145px + env(safe-area-inset-bottom,0px))}.site-header{margin:0 -16px}.header-inner{min-height:73px;padding:0 20px}.brand{font-size:20px}.brand-mark{width:33px;height:38px;font-size:11px;border-radius:9px}.privacy-chip{font-size:0;gap:0}.privacy-chip svg{width:19px;height:19px}.hero{padding:30px 2px 25px}.eyebrow{font-size:9px;letter-spacing:1.7px}h1{font-size:34px;letter-spacing:-1.3px}.muted{font-size:13px;line-height:1.75}.hero-meta{margin-top:16px}.hero-meta span{font-size:10px}.cols{grid-template-columns:minmax(0,1fr);gap:16px}.cols>section{display:contents}.source-controls,.editor-controls,.cols>aside{padding:20px;border-radius:16px}.section-title{font-size:15px;margin-bottom:20px;gap:10px}.step{width:27px;height:27px;font-size:11px}.section-subtitle{font-size:12px}.upload-drop{min-height:170px!important}.upload-drop strong{font-size:14px}.upload-drop small{font-size:12px}.file-name{font-size:11px}.divider{font-size:11px;margin:18px 0}.source-controls .tips{margin-top:20px;padding-top:18px}.tips h3{font-size:13px}.source-controls .tips ul{display:block}.tips li{font-size:12px;line-height:1.7;padding-bottom:9px}.canvaswrap{padding:22px 16px}.editor-controls .canvaswrap canvas{width:min(100%,260px)}.drag-hint{font-size:11px;margin:13px 0 22px}.range-label{font-size:13px}.range-value,#zoomval,#qval{font-size:12px}button,#download{min-height:48px;font-size:14px;padding:12px}.zoom-row button{width:44px;height:44px;min-height:44px;font-size:22px}input[type=range]{height:44px}input[type=range]::-webkit-slider-thumb{width:25px;height:25px;margin-top:-10px}input[type=range]::-moz-range-thumb{width:19px;height:19px}.editor-controls .actions button{min-height:48px;font-size:12px;padding:11px 7px}.editor-controls .actions svg{width:16px;height:16px}.notice{font-size:12px;padding:12px;line-height:1.7}.info{font-size:13px}.camera-actions button{min-height:48px;font-size:12px}.camera-area label{font-size:13px}.camera-area .info{font-size:12px}.preview-frame{width:165px}.preview-placeholder{font-size:12px}.pill{font-size:11px;padding:5px 8px}#details{font-size:12px;margin-bottom:24px}.quality-info{font-size:12px}.status{font-size:12px}.export-note{font-size:11px}.downloadbar{position:fixed;z-index:10;left:0;right:0;bottom:0;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px));background:#fffffff5;border-top:1px solid #d9e5ef;box-shadow:0 -5px 20px #00264c08}.mobile-download-status{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px;line-height:1.5;color:#52718b;overflow-wrap:anywhere;margin:0 0 8px}#download{min-height:48px;font-size:14px}.requirements{padding:17px;margin-top:18px}.requirements strong{font-size:13px}.requirements p{font-size:12px}.footer{flex-direction:column;gap:4px;font-size:11px;margin-top:20px}.processing-notice{padding:16px;gap:11px}.processing-notice h2{font-size:15px}.processing-message{font-size:13px}}
+@media(max-width:350px){.header-inner{padding:0 16px}h1{font-size:30px}.source-controls,.editor-controls,.cols>aside{padding:16px}.editor-controls .actions button{font-size:11px}.hero-meta{gap:5px}.hero-meta span{padding:5px 6px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}.processing-spinner{animation:none}}
+.enhance-panel{margin-top:20px;padding:16px;background:#f4f8fc;border:1px solid #dce9f3;border-radius:11px}.enhance-heading{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:650;cursor:pointer}.enhance-heading input{width:18px;height:18px;accent-color:#005284;margin:0;flex-shrink:0}.enhance-panel .info{font-size:11px;margin:8px 0 13px}.enhance-panel .range-label{margin:0}.enhance-panel button{width:100%;min-height:38px;margin-top:9px;font-size:11px}.enhance-panel button[aria-pressed=true]{background:#dcecf8;border-color:#8cb5d4}.compare-hint{font-size:11px;text-align:center;color:#005284;background:#e5f0f9;border-radius:6px;padding:7px;margin:10px 0 0}
+@media(max-width:760px){.enhance-heading{font-size:14px;min-height:44px}.enhance-heading input{width:22px;height:22px}.enhance-panel .info{font-size:12px}.enhance-panel button{min-height:48px;font-size:13px}.compare-hint{font-size:12px}}
 </style>
 </head>
 <body>
+<header class="site-header"><div class="header-inner"><div class="brand"><span class="brand-mark" aria-hidden="true">3:4</span><span>foto pronta<span class="brand-dot">.</span></span></div><span class="privacy-chip"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Processamento no seu dispositivo</span></div></header>
 <section class="processing-notice" id="processingNotice" aria-labelledby="processingTitle" hidden>
   <span class="processing-spinner" aria-hidden="true"></span>
   <div class="processing-content">
@@ -64,17 +33,15 @@ button[hidden]{display:none}
   </div>
 </section>
 <main class="wrap">
-  <p class="eyebrow">Sua foto, do jeito certo</p><h1>Uma boa foto. Um cadastro pronto.</h1>
-  <p class="muted">Prepare sua foto 3×4 em poucos passos. Ajuste o enquadramento, aplique o fundo branco e baixe o resultado em JPG. Tudo é processado no seu navegador.</p>
-
+  <div class="hero"><div><p class="eyebrow">Pronta para o seu próximo passo</p><h1>Sua foto 3×4,<br><span>simples assim.</span></h1><p class="muted">Da câmera ao cadastro em poucos passos. Ajuste sua foto, aplique o fundo branco e baixe o resultado.</p><div class="hero-meta"><span>Fundo branco</span><span>Enquadramento 3×4</span><span>Exportação em JPG</span></div></div><div class="hero-note"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="9" r="3"/><path d="M8 18v-1a4 4 0 0 1 8 0v1"/></svg><div><strong>Seu melhor enquadramento</strong>Um cuidado a menos no seu cadastro.</div></div></div>
   <div class="panel cols">
     <section aria-label="Escolha e edição da foto"><div class="source-controls">
-      <label for="file"><span class="step">1</span> Escolha sua foto</label>
-      <input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*">
+      <h2 class="section-title"><span class="step">1</span> Comece por uma foto</h2><p class="section-subtitle">Selecione um arquivo ou use a câmera.</p>
+      <label class="upload-drop" for="file"><span class="upload-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg></span><strong>Escolher uma foto</strong><small>JPG, PNG ou WebP</small><input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*"></label><p class="file-name" id="fileName">Nenhum arquivo selecionado</p><div class="divider">ou tire uma foto agora</div>
       <div class="actions">
-        <button type="button" id="openCamera">◎ &nbsp; Usar a câmera</button><button type="button" id="openBrowserCamera" hidden>Câmera no navegador</button>
+        <button type="button" id="openCamera"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5 6 8H3v12h18V8h-3l-2-3z"/><circle cx="12" cy="13" r="4"/></svg>Abrir câmera</button>
       </div>
-      <input type="file" id="cameraFile" accept="image/*" capture="user" hidden>
+
       <div class="camera-area" id="cameraArea" hidden>
         <label for="cameraView">Prévia da câmera</label>
         <video id="cameraView" autoplay muted playsinline aria-label="Prévia ao vivo da câmera"></video>
@@ -85,50 +52,55 @@ button[hidden]{display:none}
         </div>
         <p class="info">Permita o acesso à câmera quando solicitado. No celular, use HTTPS; no computador, HTTPS ou localhost.</p>
       </div>
-      <p class="info">Para um bom resultado, use uma foto recente e bem iluminada. Olhe de frente para a câmera e deixe o rosto em destaque.</p>
+      <div class="tips"><h3>Para sua foto ficar bem</h3><ul><li>Olhe de frente para a câmera.</li><li>Escolha um lugar bem iluminado.</li><li>Deixe o rosto em destaque.</li></ul></div>
 
-      </div><div class="editor-controls"><label for="zoom"><span class="step">2</span> Enquadramento <span id="zoomval">100%</span></label>
-      <input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled>
-      <p class="info">Arraste a foto para ajustar a posição e use o zoom para aproximar. A proporção 3×4 é mantida.</p>
+      </div><div class="editor-controls"><h2 class="section-title"><span class="step">2</span> Encontre o enquadramento</h2>
 
       <div class="canvaswrap">
         <canvas id="editor" width="600" height="800" aria-label="Prévia do recorte 3 por 4"></canvas>
       </div>
 
+      <p class="drag-hint"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M8 7l4-4 4 4M8 17l4 4 4-4M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg>Arraste a foto para ajustar a posição</p>
+      <label class="range-label" for="zoom">Zoom da imagem <span id="zoomval">100%</span></label><div class="zoom-row"><button id="minus" aria-label="Diminuir zoom" disabled>−</button><input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled><button id="plus" aria-label="Aumentar zoom" disabled>+</button></div>
       <div class="actions">
-        <button id="auto" disabled>✧ &nbsp; Ajustar automaticamente</button>
+        <button id="auto" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></svg>Ajustar automaticamente</button>
         <button id="bg" disabled>Aplicar fundo branco</button>
         <button id="reset" disabled>Centralizar imagem</button>
-        <button id="minus" disabled>− Zoom</button>
-        <button id="plus" disabled>+ Zoom</button>
+      </div>
+      <div class="enhance-panel">
+        <label class="enhance-heading" for="enhance"><input id="enhance" type="checkbox" disabled>Melhorar imagem</label>
+        <p class="info">Ajuste suave de iluminação, contraste e nitidez, preservando sua aparência.</p>
+        <label class="range-label" for="enhanceStrength">Intensidade <span class="range-value" id="enhanceVal">35%</span></label>
+        <input id="enhanceStrength" type="range" min="0" max="100" value="35" step="5" disabled>
+        <button type="button" id="compareEnhancement" aria-pressed="false" disabled>Ver sem ajustes</button>
+        <p class="compare-hint" id="compareHint" hidden>Comparação sem ajustes. O download mantém a melhoria selecionada.</p>
       </div>
       <div class="notice">Remoção automática de fundo. No primeiro uso, aguarde o download dos recursos. Confira o contorno antes de baixar.</div>
     </div></section>
 
     <aside aria-label="Resultado e download">
-      <label><span class="step">3</span> Seu resultado</label>
+      <h2 class="section-title"><span class="step">3</span> Sua foto pronta</h2><p class="section-subtitle">Confira os detalhes antes de baixar.</p>
       <div class="preview-stage"><div class="preview-frame"><div class="preview-placeholder" aria-hidden="true"><span>3:4</span>Sua foto aqui</div><img class="preview" id="preview" alt="Prévia da foto ajustada"></div></div>
-      <p class="info"><span class="pill">JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
+      <p class="specs"><span class="pill">JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
       <p class="info" id="details">600 × 800 pixels · proporção 3×4</p>
 
-      <label for="quality">Qualidade do JPG: <span id="qval">90%</span></label>
+      <label class="range-label" for="quality">Qualidade do JPG <span id="qval">90%</span></label>
       <input id="quality" type="range" min="50" max="100" value="90" step="5" disabled>
-      <p class="info">Se necessário, o arquivo é comprimido automaticamente para ficar abaixo de 3 MB.</p>
+      <p class="quality-info">O arquivo é ajustado automaticamente para ficar abaixo de 3 MB.</p>
 
-      <div class="downloadbar"><p class="mobile-download-status" id="mobileStatus" aria-hidden="true">Selecione uma foto para começar.</p><button class="primary" id="download" disabled>↓ &nbsp; Baixar foto 3×4</button></div>
+      <div class="downloadbar"><p class="mobile-download-status" id="mobileStatus" aria-hidden="true">Selecione uma foto para começar.</p><button class="primary" id="download" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>Baixar foto 3×4</button></div>
       <p id="status" class="status" role="status" aria-live="polite">Selecione uma imagem para começar.</p>
     </aside>
   </div>
 
-  <div class="panel requirements">
+  <div class="requirements"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg><div>
     <strong>Confira antes de enviar</strong>
     <p class="small muted">Foto recente; usuário de frente com o rosto em primeiro plano; fundo branco ou neutro; arquivo JPG/JPEG com tamanho máximo de 3 MB; enquadramento 3×4. Sempre confira visualmente o resultado final antes de enviar.</p>
-  </div>
+  </div></div>
 <footer class="footer"><span>Feito para simplificar sua próxima foto de cadastro.</span><span>Suas fotos são processadas localmente no navegador.</span></footer></main>
 
 <script>
 const file=document.querySelector('#file');
-const cameraFile=document.querySelector('#cameraFile');
 const cameraArea=document.querySelector('#cameraArea');
 const cameraView=document.querySelector('#cameraView');
 const openCameraButton=document.querySelector('#openCamera');
@@ -152,7 +124,7 @@ async function startCamera(){
   setStatus('Solicitando permissão da câmera...');
   try{
     const stream=await navigator.mediaDevices.getUserMedia({
-      audio:false, video:{facingMode:{ideal:cameraFacing},width:{ideal:1280},height:{ideal:1600}}
+      audio:false, video:{facingMode:{ideal:cameraFacing},width:{ideal:1920},height:{ideal:2560}}
     });
     cameraStream=stream;
     cameraView.srcObject=stream;
@@ -165,22 +137,13 @@ async function startCamera(){
     setStatus('Não foi possível abrir a câmera. Confira a permissão no navegador e use HTTPS ou localhost.');
   }
 }
-function useNativeCamera(){
+function isTouchDevice(){
   return navigator.maxTouchPoints>0 && window.matchMedia('(pointer:coarse)').matches;
 }
 function openPhotoCamera(){
-  if(useNativeCamera()){
-    stopCamera();
-    cameraFile.value='';
-    cameraFile.click();
-  }else{
-    startCamera();
-  }
+  return startCamera();
 }
 openCameraButton.addEventListener('click',openPhotoCamera);
-const browserCameraButton=document.querySelector('#openBrowserCamera');
-browserCameraButton.hidden=!useNativeCamera();
-browserCameraButton.addEventListener('click',startCamera);
 document.querySelector('#closeCamera').addEventListener('click',()=>{stopCamera();setStatus('Câmera fechada.');});
 document.querySelector('#switchCamera').addEventListener('click',()=>{cameraFacing=cameraFacing==='user'?'environment':'user';startCamera();});
 captureButton.addEventListener('click',()=>{
@@ -198,7 +161,7 @@ captureButton.addEventListener('click',()=>{
   snap.toBlob(blob=>{
     if(!blob){setStatus('Não foi possível capturar a foto.');return;}
     loadPhoto(URL.createObjectURL(blob));
-  },'image/jpeg',0.95);
+  },'image/png');
 });
 window.addEventListener('pagehide',stopCamera);
 const canvas=document.querySelector('#editor');
@@ -211,6 +174,10 @@ const details=document.querySelector('#details');
 const zoomVal=document.querySelector('#zoomval');
 const qVal=document.querySelector('#qval');
 const W=600,H=800;
+const enhance=document.querySelector('#enhance');
+const enhanceStrength=document.querySelector('#enhanceStrength');
+const compareEnhancement=document.querySelector('#compareEnhancement');
+let comparingEnhancement=false;
 
 let originalImg=null;
 let processedCanvas=null;
@@ -236,7 +203,53 @@ function setStatus(msg){
   }
 }
 
-function paint(){
+// Work on the final 600x800 crop to bound memory and keep all source pixels intact.
+function enhancePhotoPixels(input,width,height,intensity){
+  const amount=Math.max(0,Math.min(100,Number(intensity)||0))/100;
+  const output=new Uint8ClampedArray(input);
+  if(!amount)return output;
+  const count=width*height,luma=new Float32Array(count);
+  let sum=0,samples=0;
+  for(let i=0;i<count;i++){
+    const p=i*4,y=.2126*input[p]+.7152*input[p+1]+.0722*input[p+2];
+    luma[i]=y;
+    if(y>10 && y<245 && input[p+3]>0){sum+=y;samples++;}
+  }
+  const average=samples?sum/samples:128;
+  const lift=Math.min(18,Math.max(0,(125-average)*.28))*amount;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const i=y*width+x,p=i*4,light=luma[i];
+    // The white backdrop and transparent pixels must remain unchanged.
+    if((input[p]===255 && input[p+1]===255 && input[p+2]===255) || input[p+3]===0)continue;
+    let detail=0;
+    if(x>0 && x<width-1 && y>0 && y<height-1){
+      const left=luma[i-1],right=luma[i+1],top=luma[i-width],bottom=luma[i+width];
+      // Avoid sharpening the subject against white into a visible halo.
+      if(light<245 && left<245 && right<245 && top<245 && bottom<245){
+        const blur=(light*4+left+right+top+bottom)/8;
+        detail=Math.max(-8,Math.min(8,(light-blur)*.7))*amount;
+      }
+    }
+    const shadows=1-light/255;
+    const delta=lift*shadows*shadows+(light-128)*.035*amount+detail;
+    for(let channel=0;channel<3;channel++)output[p+channel]=input[p+channel]+delta;
+  }
+  return output;
+}
+
+function updateEnhancementControls(){
+  const ready=!!originalImg;
+  enhance.disabled=!ready;
+  enhanceStrength.disabled=!ready || !enhance.checked;
+  compareEnhancement.disabled=!ready || !enhance.checked || +enhanceStrength.value===0;
+  document.querySelector('#enhanceVal').textContent=enhanceStrength.value+'%';
+  if(compareEnhancement.disabled)comparingEnhancement=false;
+  compareEnhancement.setAttribute('aria-pressed',String(comparingEnhancement));
+  compareEnhancement.textContent=comparingEnhancement?'Voltar à melhoria':'Ver sem ajustes';
+  document.querySelector('#compareHint').hidden=!comparingEnhancement;
+}
+
+function paint(forExport=false){
   ctx.fillStyle='#fff';
   ctx.fillRect(0,0,W,H);
   const src=currentSource();
@@ -249,7 +262,13 @@ function paint(){
   }
   const sw=src.width || src.naturalWidth;
   const sh=src.height || src.naturalHeight;
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
   ctx.drawImage(src,dx,dy,sw*scale,sh*scale);
+  if(enhance.checked && (!comparingEnhancement || forExport) && +enhanceStrength.value>0){
+    const pixels=ctx.getImageData(0,0,W,H);
+    pixels.data.set(enhancePhotoPixels(pixels.data,W,H,+enhanceStrength.value));
+    ctx.putImageData(pixels,0,0);
+  }
 }
 
 function constrain(){
@@ -470,7 +489,7 @@ async function inferBackground(engine,raw){
 }
 
 function shouldUseLightweightBackground(){
-  return useNativeCamera() || navigator.userAgentData?.mobile===true
+  return isTouchDevice() || navigator.userAgentData?.mobile===true
     || (navigator.deviceMemory>0 && navigator.deviceMemory<=4);
 }
 
@@ -695,7 +714,13 @@ async function applyBackgroundOnly(){
   }
 }
 
-function blobJpeg(q){ return new Promise(res=>canvas.toBlob(res,'image/jpeg',q)); }
+function blobJpeg(q){
+  // The comparison only affects the editor, never the selected download result.
+  paint(true);
+  const blob=new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',q));
+  if(comparingEnhancement)paint();
+  return blob;
+}
 
 async function exportBlob(){
   let q=+quality.value/100;
@@ -741,10 +766,12 @@ function loadPhoto(url){
         if(token!==loadToken) return;
         if(!blob){setStatus('Não foi possível preparar a foto. Tente selecionar outra imagem.');return;}
         loadPhoto(URL.createObjectURL(blob));
-      },'image/jpeg',0.95);
+      },'image/png');
       return;
     }
     originalImg=i;
+    comparingEnhancement=false;
+    updateEnhancementControls();
     processedCanvas=null;
     zoom.disabled=quality.disabled=false;
     ['auto','bg','reset','minus','plus','download'].forEach(id=>document.getElementById(id).disabled=bgBusy && ['auto','bg','download'].includes(id));
@@ -764,12 +791,21 @@ function loadSelectedPhoto(input){
   if(!photo) return;
   // Some native camera pickers return a valid image without a MIME type.
   if(photo.type && !photo.type.startsWith('image/')){setStatus('Escolha um arquivo de imagem.');return;}
+  const fileName=document.querySelector('#fileName');
+  if(fileName){fileName.textContent=photo.name || 'Foto selecionada';fileName.title=fileName.textContent;}
   stopCamera();
   loadPhoto(URL.createObjectURL(photo));
 }
 file.addEventListener('change',()=>loadSelectedPhoto(file));
-cameraFile.addEventListener('change',()=>loadSelectedPhoto(cameraFile));
-cameraFile.addEventListener('cancel',()=>setStatus('Captura cancelada. Você pode tentar novamente ou selecionar uma foto.'));
+enhance.addEventListener('change',()=>{
+  comparingEnhancement=false;updateEnhancementControls();paint();schedule();
+});
+enhanceStrength.addEventListener('input',()=>{
+  comparingEnhancement=false;updateEnhancementControls();paint();schedule();
+});
+compareEnhancement.addEventListener('click',()=>{
+  comparingEnhancement=!comparingEnhancement;updateEnhancementControls();paint();
+});
 zoom.addEventListener('input',()=>setZoom(+zoom.value));
 quality.addEventListener('input',()=>{ qVal.textContent=quality.value+'%'; schedule(); });
 document.querySelector('#auto').onclick=autoProcess;
