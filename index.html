@@ -166,9 +166,12 @@ openCameraButton.addEventListener('click',startCamera);
 document.querySelector('#closeCamera').addEventListener('click',()=>{stopCamera();setStatus('Câmera fechada.');});
 document.querySelector('#switchCamera').addEventListener('click',()=>{cameraFacing=cameraFacing==='user'?'environment':'user';startCamera();});
 captureButton.addEventListener('click',()=>{
-  if(!cameraStream||!cameraView.videoWidth){setStatus('A câmera ainda não está pronta.');return;}
+  if(!cameraStream || !cameraView.videoWidth || !cameraView.videoHeight || cameraView.readyState<2){setStatus('A câmera ainda não está pronta. Aguarde a imagem aparecer.');return;}
+  captureButton.disabled=true;
   const snap=document.createElement('canvas');
-  snap.width=cameraView.videoWidth;snap.height=cameraView.videoHeight;
+  const captureScale=Math.min(1,1600/Math.max(cameraView.videoWidth,cameraView.videoHeight));
+  snap.width=Math.max(1,Math.round(cameraView.videoWidth*captureScale));
+  snap.height=Math.max(1,Math.round(cameraView.videoHeight*captureScale));
   const sc=snap.getContext('2d');
   // Espelha a câmera frontal para corresponder à prévia apresentada.
   if(cameraFacing==='user'){sc.translate(snap.width,0);sc.scale(-1,1);}
@@ -311,6 +314,7 @@ function loadFaceApi(){
 
 const BG_MODEL='studioludens/birefnet-lite-512';
 let bgRuntimePromise=null,bgForceCpu=false,bgBusy=false;
+let pendingAutoProcess=false;
 let bgProgress=()=>{};
 let backgroundCache=new WeakMap();
 
@@ -369,6 +373,10 @@ function setBackgroundBusy(busy){
   if(busy) setStatus('Aguarde. Estamos preparando os recursos para sua foto…');
   for(const id of ['auto','bg','download']) document.getElementById(id).disabled=busy || !originalImg;
   document.querySelector('.editor-controls').setAttribute('aria-busy',String(busy));
+  if(!busy && pendingAutoProcess){
+    pendingAutoProcess=false;
+    queueMicrotask(()=>autoProcess());
+  }
 }
 
 async function findFace(image){
@@ -494,49 +502,50 @@ async function createWhiteBackgroundVersion(image,onProgress=()=>{}){
 }
 
 async function autoProcess(){
-  if(!originalImg || bgBusy) return;
-  const token=++loadToken;
-  const img=originalImg;
+  if(!originalImg) return;
+  if(bgBusy){pendingAutoProcess=true;return;}
+  pendingAutoProcess=false;
+  const token=++loadToken,img=originalImg;
+  const isCurrent=()=>token===loadToken && img===originalImg;
   setBackgroundBusy(true);
-  const report=message=>{if(token===loadToken && img===originalImg)setStatus(message);};
-  let faceBox=null;
-  let bgApplied=false;
-  setStatus('Processando automaticamente: detectando rosto e tentando aplicar fundo branco...');
-
+  const report=message=>{if(isCurrent())setStatus(message);};
+  let bgApplied=false,bgError=null,faceBox=null;
   try{
-    faceBox=await findFace(img);
-    if(token!==loadToken || img!==originalImg){setBackgroundBusy(false);return;}
-  }catch(e){ console.warn('Falha na detecção facial:', e); }
-
-  try{
-    const output=await createWhiteBackgroundVersion(img,report);
-    if(token!==loadToken || img!==originalImg) return;
-    processedCanvas=output;
-    bgApplied=true;
-  }catch(e){
-    if(token!==loadToken || img!==originalImg) return;
-    processedCanvas=null;
-    console.warn('Falha na remoção de fundo:', e);
+    // Background removal must not wait for a face-detection library or camera GPU.
+    report('Foto recebida. Aguarde enquanto aplicamos o fundo branco…');
+    try{
+      const output=await createWhiteBackgroundVersion(img,report);
+      if(!isCurrent()) return;
+      processedCanvas=output;
+      bgApplied=true;
+    }catch(error){
+      if(!isCurrent()) return;
+      bgError=error;
+      console.warn('Falha na remoção de fundo:',error);
+      processedCanvas=null;
+    }
+    if(!isCurrent()) return;
+    zoom.value=100;zoomVal.textContent='100%';
+    recenter();
+    report(bgApplied?'Fundo branco aplicado. Finalizando o enquadramento…':'Finalizando o enquadramento. A remoção de fundo precisará de uma nova tentativa.');
+    let timer;
+    try{
+      faceBox=await Promise.race([
+        findFace(img),
+        new Promise(resolve=>{timer=setTimeout(()=>resolve(null),8000);})
+      ]);
+    }catch(error){console.warn('Falha na detecção facial:',error);}
+    finally{clearTimeout(timer);}
+    if(!isCurrent()) return;
+    if(faceBox) fitFace(faceBox);
+    if(bgApplied){
+      setStatus('Fundo branco aplicado. '+(faceBox?'Rosto centralizado. ':'')+'Confira a prévia antes de baixar.');
+    }else{
+      setStatus('Não foi possível aplicar o fundo branco: '+(bgError?.message || 'falha no processamento')+'. Toque em Aplicar fundo branco para tentar novamente.');
+    }
   }finally{
     setBackgroundBusy(false);
   }
-  if(token!==loadToken || img!==originalImg) return;
-
-  const src=currentSource();
-  if(!src) return;
-  zoom.value=100;
-  zoomVal.textContent='100%';
-  recenter();
-  if(faceBox){
-    fitFace(faceBox);
-  }
-
-  const msgs=[];
-  if(faceBox) msgs.push('rosto centralizado automaticamente');
-  else msgs.push('rosto não detectado, imagem centralizada');
-  if(bgApplied) msgs.push('fundo branco aplicado');
-  else msgs.push('fundo branco não pôde ser aplicado');
-  setStatus('Processamento concluído: '+msgs.join(' · ')+'. Confira a prévia e ajuste se necessário.');
 }
 
 async function applyBackgroundOnly(){
@@ -603,8 +612,8 @@ function loadPhoto(url){
     qVal.textContent=quality.value+'%';
     recenter();
     setStatus('Imagem carregada. Iniciando processamento automático...');
-    if(!bgBusy) autoProcess();
-    else setStatus('Foto carregada. Aguarde o processamento anterior terminar e clique em Aplicar fundo branco.');
+    autoProcess();
+    if(bgBusy && pendingAutoProcess) setStatus('Nova foto recebida. Aguarde: ela será processada automaticamente em seguida.');
   };
   i.onerror=()=>{ URL.revokeObjectURL(url);setStatus('Não foi possível abrir esta imagem.'); };
   i.src=url;
