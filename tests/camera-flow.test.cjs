@@ -96,3 +96,69 @@ test('camera capture waits for a frame and preserves aspect ratio and mirroring'
   assert.deepEqual(operations.slice(0, 2), [['translate', 1600, 0], ['scale', -1, 1]]);
   assert.equal(loaded, 'blob:snapshot');
 });
+
+test('touch devices use the native camera file picker and desktops keep live capture', () => {
+  let opened = 0, stopped = 0, live = 0;
+  const c = {
+    navigator: { maxTouchPoints: 1 },
+    window: { matchMedia: () => ({ matches: true }) },
+    cameraFile: { value: 'previous', click() { opened++; } },
+    stopCamera() { stopped++; }, startCamera() { live++; },
+    openCameraButton: { addEventListener() {} },
+  };
+  vm.createContext(c);
+  vm.runInContext(script.slice(script.indexOf('function useNativeCamera'), script.indexOf('const browserCameraButton')), c);
+  c.openPhotoCamera();
+  assert.equal(opened, 1);
+  assert.equal(stopped, 1);
+  assert.equal(c.cameraFile.value, '');
+  c.navigator.maxTouchPoints = 0;
+  c.openPhotoCamera();
+  assert.equal(live, 1);
+  assert.equal(opened, 1);
+});
+
+test('native camera files with missing MIME type enter the same image pipeline', () => {
+  let selected, status;
+  const c = {
+    stopCamera() {},
+    loadPhoto(url) { selected = url; },
+    setStatus(message) { status = message; },
+    URL: { createObjectURL: file => 'blob:' + file.name },
+  };
+  vm.createContext(c);
+  vm.runInContext(script.slice(script.indexOf('function loadSelectedPhoto'), script.indexOf("file.addEventListener('change'")), c);
+  c.loadSelectedPhoto({ files: [{ name: 'camera.jpg', type: '' }] });
+  assert.equal(selected, 'blob:camera.jpg');
+  selected = null;
+  c.loadSelectedPhoto({ files: [{ name: 'bad.txt', type: 'text/plain' }] });
+  assert.equal(selected, null);
+  assert.match(status, /imagem/);
+});
+
+test('large native camera photos are resized before background inference', async () => {
+  const { c, calls } = processingContext();
+  let resized;
+  c.Image = class {
+    set src(url) {
+      this.url = url;
+      this.naturalWidth = url === 'blob:large' ? 2880 : 1280;
+      this.naturalHeight = url === 'blob:large' ? 3600 : 1600;
+      queueMicrotask(() => this.onload());
+    }
+  };
+  c.URL.createObjectURL = () => 'blob:scaled';
+  c.document.createElement = () => {
+    resized = {
+      getContext: () => ({ fillRect() {}, drawImage() {} }),
+      toBlob(callback) { queueMicrotask(() => callback({ type: 'image/jpeg' })); },
+    };
+    return resized;
+  };
+  c.loadPhoto('blob:large');
+  await turn();
+  assert.equal(resized.width, 1280);
+  assert.equal(resized.height, 1600);
+  assert.equal(c.processedCanvas.image.url, 'blob:scaled');
+  assert.deepEqual(calls.filter(x => x[0] === 'background').map(x => x[1]), ['blob:scaled']);
+});

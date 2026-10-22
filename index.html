@@ -50,6 +50,7 @@
 @keyframes processing-spin{to{transform:rotate(360deg)}}
 @media(max-width:720px){.processing-notice{padding:16px;gap:11px}.processing-notice h2{font-size:15px}.processing-message{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.processing-spinner{animation:none}}
+button[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -71,8 +72,9 @@
       <label for="file"><span class="step">1</span> Escolha sua foto</label>
       <input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*">
       <div class="actions">
-        <button type="button" id="openCamera">◎ &nbsp; Usar a câmera</button>
+        <button type="button" id="openCamera">◎ &nbsp; Usar a câmera</button><button type="button" id="openBrowserCamera" hidden>Câmera no navegador</button>
       </div>
+      <input type="file" id="cameraFile" accept="image/*" capture="user" hidden>
       <div class="camera-area" id="cameraArea" hidden>
         <label for="cameraView">Prévia da câmera</label>
         <video id="cameraView" autoplay muted playsinline aria-label="Prévia ao vivo da câmera"></video>
@@ -126,6 +128,7 @@
 
 <script>
 const file=document.querySelector('#file');
+const cameraFile=document.querySelector('#cameraFile');
 const cameraArea=document.querySelector('#cameraArea');
 const cameraView=document.querySelector('#cameraView');
 const openCameraButton=document.querySelector('#openCamera');
@@ -162,7 +165,22 @@ async function startCamera(){
     setStatus('Não foi possível abrir a câmera. Confira a permissão no navegador e use HTTPS ou localhost.');
   }
 }
-openCameraButton.addEventListener('click',startCamera);
+function useNativeCamera(){
+  return navigator.maxTouchPoints>0 && window.matchMedia('(pointer:coarse)').matches;
+}
+function openPhotoCamera(){
+  if(useNativeCamera()){
+    stopCamera();
+    cameraFile.value='';
+    cameraFile.click();
+  }else{
+    startCamera();
+  }
+}
+openCameraButton.addEventListener('click',openPhotoCamera);
+const browserCameraButton=document.querySelector('#openBrowserCamera');
+browserCameraButton.hidden=!useNativeCamera();
+browserCameraButton.addEventListener('click',startCamera);
 document.querySelector('#closeCamera').addEventListener('click',()=>{stopCamera();setStatus('Câmera fechada.');});
 document.querySelector('#switchCamera').addEventListener('click',()=>{cameraFacing=cameraFacing==='user'?'environment':'user';startCamera();});
 captureButton.addEventListener('click',()=>{
@@ -603,6 +621,22 @@ function loadPhoto(url){
   i.onload=()=>{
     URL.revokeObjectURL(url);
     if(token!==loadToken)return;
+    if(Math.max(i.naturalWidth,i.naturalHeight)>1600){
+      const ratio=1600/Math.max(i.naturalWidth,i.naturalHeight);
+      const resized=document.createElement('canvas');
+      resized.width=Math.max(1,Math.round(i.naturalWidth*ratio));
+      resized.height=Math.max(1,Math.round(i.naturalHeight*ratio));
+      const resizeCtx=resized.getContext('2d');
+      resizeCtx.fillStyle='#ffffff';resizeCtx.fillRect(0,0,resized.width,resized.height);
+      resizeCtx.drawImage(i,0,0,resized.width,resized.height);
+      setStatus('Preparando a foto para aplicar o fundo branco…');
+      resized.toBlob(blob=>{
+        if(token!==loadToken) return;
+        if(!blob){setStatus('Não foi possível preparar a foto. Tente selecionar outra imagem.');return;}
+        loadPhoto(URL.createObjectURL(blob));
+      },'image/jpeg',0.95);
+      return;
+    }
     originalImg=i;
     processedCanvas=null;
     zoom.disabled=quality.disabled=false;
@@ -618,14 +652,17 @@ function loadPhoto(url){
   i.onerror=()=>{ URL.revokeObjectURL(url);setStatus('Não foi possível abrir esta imagem.'); };
   i.src=url;
 }
-file.addEventListener('change',()=>{
-  const f=file.files?.[0];
-  if(!f) return;
-  if(!f.type.startsWith('image/')){setStatus('Escolha um arquivo de imagem.');return;}
+function loadSelectedPhoto(input){
+  const photo=input.files?.[0];
+  if(!photo) return;
+  // Some native camera pickers return a valid image without a MIME type.
+  if(photo.type && !photo.type.startsWith('image/')){setStatus('Escolha um arquivo de imagem.');return;}
   stopCamera();
-  loadPhoto(URL.createObjectURL(f));
-});
-
+  loadPhoto(URL.createObjectURL(photo));
+}
+file.addEventListener('change',()=>loadSelectedPhoto(file));
+cameraFile.addEventListener('change',()=>loadSelectedPhoto(cameraFile));
+cameraFile.addEventListener('cancel',()=>setStatus('Captura cancelada. Você pode tentar novamente ou selecionar uma foto.'));
 zoom.addEventListener('input',()=>setZoom(+zoom.value));
 quality.addEventListener('input',()=>{ qVal.textContent=quality.value+'%'; schedule(); });
 document.querySelector('#auto').onclick=autoProcess;
