@@ -81,10 +81,12 @@ let originalImg=null;
 let processedCanvas=null;
 let scale=1,minScale=1,dx=0,dy=0,drag=null,renderToken=0,loadToken=0;
 let faceLibPromise=null,bgLibPromise=null;
+let previewReady=false;
 
 function currentSource(){ return processedCanvas || originalImg; }
 
 function setStatus(msg){
+  statusEl.dataset.tone=/^(Não|Erro|Falha|O celular ficou)/i.test(msg)?'error':/^Fundo branco aplicado|^Foto JPG pronta/i.test(msg)?'success':'neutral';
   statusEl.textContent=msg;
   document.querySelector('#mobileStatus').textContent=msg;
   if(bgBusy){
@@ -301,6 +303,39 @@ function loadBgApi(){
   return bgLibPromise;
 }
 
+// Presentation state is separate from segmentation and image enhancement.
+function syncPhotoUi(){
+  const ready=!!originalImg && previewReady && !bgBusy;
+  document.body.dataset.photoState=bgBusy?'processing':!originalImg?'empty':ready?'ready':'editing';
+  document.querySelector('#download').disabled=!ready;
+  document.querySelector('#newImage').disabled=!originalImg || bgBusy;
+  for(const button of document.querySelectorAll('[data-move]'))button.disabled=!originalImg || bgBusy;
+}
+
+function resetPhoto(){
+  if(bgBusy)return;
+  ++loadToken;++renderToken;
+  pendingAutoProcess=false;
+  stopCamera();
+  originalImg=null;processedCanvas=null;previewReady=false;
+  backgroundCache=new WeakMap();
+  scale=minScale=1;dx=dy=0;drag=null;
+  file.value='';zoom.value=100;quality.value=90;
+  zoom.disabled=quality.disabled=true;
+  zoomVal.textContent='100%';qVal.textContent='90%';
+  enhance.checked=false;enhanceStrength.value=35;comparingEnhancement=false;
+  updateEnhancementControls();
+  if(preview.dataset.url)URL.revokeObjectURL(preview.dataset.url);
+  delete preview.dataset.url;preview.removeAttribute('src');
+  details.textContent='600 × 800 pixels · proporção 3×4';
+  document.querySelector('#fileName').textContent='Nenhum arquivo selecionado';
+  document.querySelector('#fileName').removeAttribute('title');
+  for(const id of ['auto','bg','reset','minus','plus'])document.getElementById(id).disabled=true;
+  syncPhotoUi();paint();
+  setStatus('Selecione uma imagem ou abra a câmera para começar.');
+  file.focus();
+}
+
 function setBackgroundBusy(busy){
   bgBusy=busy;
   document.querySelector('#processingNotice').hidden=!busy;
@@ -308,6 +343,7 @@ function setBackgroundBusy(busy){
   if(busy) setStatus('Aguarde. Estamos preparando os recursos para sua foto…');
   for(const id of ['auto','bg','download']) document.getElementById(id).disabled=busy || !originalImg;
   document.querySelector('.editor-controls').setAttribute('aria-busy',String(busy));
+  syncPhotoUi();
   if(!busy && pendingAutoProcess){
     pendingAutoProcess=false;
     queueMicrotask(()=>autoProcess());
@@ -634,6 +670,7 @@ function schedule(){
   let t=++renderToken;
   const src=currentSource();
   if(!src) return;
+  previewReady=false;syncPhotoUi();
   setTimeout(async()=>{
     const b=await exportBlob();
     if(t!==renderToken || !b) return;
@@ -641,6 +678,7 @@ function schedule(){
     const u=URL.createObjectURL(b);
     preview.dataset.url=u;
     preview.src=u;
+    previewReady=true;syncPhotoUi();
     details.textContent=`600 × 800 pixels · JPG · ${(b.size/1024).toFixed(0)} KB`;
   },100);
 }
@@ -668,6 +706,9 @@ function loadPhoto(url){
       return;
     }
     originalImg=i;
+    previewReady=false;
+    preview.removeAttribute('src');
+    syncPhotoUi();
     comparingEnhancement=false;
     updateEnhancementControls();
     processedCanvas=null;
@@ -695,6 +736,36 @@ function loadSelectedPhoto(input){
   loadPhoto(URL.createObjectURL(photo));
 }
 file.addEventListener('change',()=>loadSelectedPhoto(file));
+const uploadZone=document.querySelector('.upload-drop');
+for(const name of ['dragenter','dragover'])uploadZone.addEventListener(name,event=>{
+  event.preventDefault();
+  if(event.dataTransfer)event.dataTransfer.dropEffect='copy';
+  uploadZone.classList.add('is-dragging');
+});
+uploadZone.addEventListener('dragleave',event=>{
+  if(!uploadZone.contains(event.relatedTarget))uploadZone.classList.remove('is-dragging');
+});
+uploadZone.addEventListener('drop',event=>{
+  event.preventDefault();uploadZone.classList.remove('is-dragging');
+  const photo=event.dataTransfer?.files?.[0];
+  if(photo)loadSelectedPhoto({files:[photo]});
+});
+document.querySelector('#newImage').addEventListener('click',resetPhoto);
+function movePhoto(direction,step=5){
+  if(!currentSource() || bgBusy)return;
+  if(direction==='left')dx-=step;
+  if(direction==='right')dx+=step;
+  if(direction==='up')dy-=step;
+  if(direction==='down')dy+=step;
+  constrain();paint();schedule();
+}
+for(const button of document.querySelectorAll('[data-move]'))button.addEventListener('click',()=>movePhoto(button.dataset.move,10));
+canvas.addEventListener('keydown',event=>{
+  const direction={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[event.key];
+  if(!currentSource() || bgBusy || !direction)return;
+  event.preventDefault();movePhoto(direction,event.shiftKey?20:5);
+});
+
 enhance.addEventListener('change',()=>{
   comparingEnhancement=false;updateEnhancementControls();paint();schedule();
 });
@@ -744,4 +815,5 @@ document.querySelector('#download').onclick=async()=>{
   setStatus('Foto JPG pronta para envio.');
 };
 
+syncPhotoUi();
 paint();

@@ -9,10 +9,10 @@
 <link rel="icon" href="favicon.ico?v=a893bea58ddc" sizes="32x32">
 <link rel="icon" href="favicon.svg?v=3248558b2ebe" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=68f1e552d105" sizes="180x180">
-<link rel="stylesheet" href="styles.css?v=1dae6df88965">
+<link rel="stylesheet" href="styles.css?v=5651121672f9">
 </head>
-<body>
-<header class="site-header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="logo.svg?v=fdcc498ddd1f" alt="foto pronta" width="198" height="45"></div><span class="privacy-chip"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Processamento no seu dispositivo</span></div></header>
+<body data-photo-state="empty">
+<header class="site-header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="logo.svg?v=fdcc498ddd1f" alt="foto pronta" width="198" height="45"></div><span class="privacy-chip"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Processamento local e seguro</span></div></header>
 <section class="processing-notice" id="processingNotice" aria-labelledby="processingTitle" hidden>
   <span class="processing-spinner" aria-hidden="true"></span>
   <div class="processing-content">
@@ -24,23 +24,14 @@
 </section>
 <main class="wrap">
   <section class="hero" aria-labelledby="heroTitle">
-    <div class="hero-copy">
-      <p class="eyebrow"><span class="hero-dot" aria-hidden="true"></span>Seu estúdio de foto 3×4</p>
-      <h1 id="heroTitle">Sua melhor foto.<br><span>Pronta para o cadastro.</span></h1>
-      <p class="muted">Uma foto bem enquadrada faz toda a diferença. Prepare a sua com fundo branco e ajustes naturais, direto no navegador.</p>
-      <div class="hero-meta"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Fundo branco</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Recorte 3×4</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Pronta em JPG</span></div>
-    </div>
-    <div class="hero-art" aria-hidden="true">
-      <div class="art-orbit"></div>
-      <div class="art-photo"><span class="art-ratio">3:4</span><div class="art-person"><div class="art-head"></div><div class="art-body"></div></div><span class="art-corner corner-tl"></span><span class="art-corner corner-tr"></span><span class="art-corner corner-bl"></span><span class="art-corner corner-br"></span></div>
-      <div class="art-badge"><span class="art-check">✓</span><div><strong>Bom enquadramento</strong><span>Seu próximo passo começa aqui.</span></div></div>
-    </div>
-  </section>
-  <div class="workspace-heading"><div><p class="eyebrow">Do seu jeito, em poucos passos</p><h2>Vamos preparar sua foto?</h2></div><span class="workspace-format">3×4 <span>·</span> 600 × 800 px</span></div>  <div class="panel cols">
+    <p class="eyebrow">Fotos no padrão para documentos</p>
+    <h1 id="heroTitle">Sua melhor foto, <span>pronta para o cadastro.</span></h1>
+    <p class="muted">Ajuste sua foto no tamanho 3×4 com facilidade. Enquadre, personalize o fundo e baixe sua imagem pronta para utilização.</p>
+    <ul class="benefits" aria-label="Benefícios"><li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Processamento local</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3-8 3v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Privacidade das imagens</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-7z"/></svg>Ajuste rápido e simples</li></ul>
+  </section>  <div class="panel cols" id="ajustar-foto">
     <section aria-label="Escolha e edição da foto"><div class="source-controls">
-      <h2 class="section-title"><span class="step">1</span> Comece por uma foto</h2><p class="section-subtitle">Selecione um arquivo ou use a câmera.</p>
-      <label class="upload-drop" for="file"><span class="upload-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg></span><strong>Escolher uma foto</strong><small>JPG, PNG ou WebP</small><input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*"></label><p class="file-name" id="fileName">Nenhum arquivo selecionado</p><div class="divider">ou tire uma foto agora</div>
-      <div class="actions">
+      <div class="panel-heading"><h2 class="section-title"><span class="step">1</span> Escolha sua foto</h2><p class="section-subtitle">Selecione um arquivo ou tire uma foto agora.</p></div><div class="photo-inputs">
+      <label class="upload-drop" for="file"><span class="upload-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 16 5-5 5 5 3-3 5 5"/></svg></span><strong>Arraste sua foto até aqui</strong><small>JPG, PNG ou WebP</small><span class="upload-action">Selecionar arquivo</span><input class="upload" type="file" id="file" aria-label="Selecionar arquivo de imagem" accept="image/jpeg,image/png,image/webp,image/*"></label><p class="file-name" id="fileName">Nenhum arquivo selecionado</p><div class="divider">ou use sua câmera</div>      <div class="actions">
         <button type="button" id="openCamera"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 5 6 8H3v12h18V8h-3l-2-3z"/><circle cx="12" cy="13" r="4"/></svg>Abrir câmera</button>
       </div>
 
@@ -54,34 +45,36 @@
         </div>
         <p class="info">Permita o acesso à câmera quando solicitado. No celular, use HTTPS; no computador, HTTPS ou localhost.</p>
       </div>
-      <div class="tips"><h3>Para sua foto ficar bem</h3><ul><li>Olhe de frente para a câmera.</li><li>Escolha um lugar bem iluminado.</li><li>Deixe o rosto em destaque.</li></ul></div>
+      </div><div class="tips"><h3>Para sua foto ficar bem</h3><ul><li>Olhe de frente para a câmera.</li><li>Escolha um lugar bem iluminado.</li><li>Deixe o rosto em destaque.</li></ul></div>
 
-      </div><div class="editor-controls"><h2 class="section-title"><span class="step">2</span> Encontre o enquadramento</h2>
+      </div><div class="editor-controls"><div class="panel-heading editor-heading"><div><h2 class="section-title"><span class="step">2</span> Ajuste sua foto</h2><p class="section-subtitle">Enquadre o rosto e ajuste os detalhes.</p></div><span class="format-badge">3×4</span></div>
 
-      <div class="canvaswrap">
-        <canvas id="editor" width="600" height="800" aria-label="Prévia do recorte 3 por 4"></canvas>
+      <div class="canvaswrap"><div class="editor-empty" id="editorEmpty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4v5m12-5h4v5M4 16v5h4m8 0h4v-5"/><circle cx="12" cy="10" r="3"/><path d="M7 19v-1a5 5 0 0 1 10 0v1"/></svg><strong>Sua foto começa aqui</strong><span>Selecione uma imagem ou abra a câmera.</span></div>
+        <div class="crop-view">
+        <canvas id="editor" width="600" height="800" tabindex="0" aria-label="Editor de foto 3 por 4" aria-describedby="editorHint"></canvas>
+        <span class="crop-guides" aria-hidden="true"></span></div>
       </div>
 
-      <p class="drag-hint"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M8 7l4-4 4 4M8 17l4 4 4-4M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg>Arraste a foto para ajustar a posição</p>
-      <label class="range-label" for="zoom">Zoom da imagem <span id="zoomval">100%</span></label><div class="zoom-row"><button id="minus" aria-label="Diminuir zoom" disabled>−</button><input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled><button id="plus" aria-label="Aumentar zoom" disabled>+</button></div>
+      <p class="drag-hint" id="editorHint"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M8 7l4-4 4 4M8 17l4 4 4-4M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg>Arraste para posicionar ou use as setas do teclado.</p>
+      <div class="position-controls"><div class="zoom-control"><label class="range-label" for="zoom">Zoom <span id="zoomval">100%</span></label><div class="zoom-row"><button id="minus" aria-label="Diminuir zoom" disabled>−</button><input type="range" id="zoom" min="100" max="350" step="1" value="100" disabled><button id="plus" aria-label="Aumentar zoom" disabled>+</button></div></div><fieldset class="move-control"><legend>Mover imagem</legend><div class="move-buttons"><button type="button" data-move="up" aria-label="Mover imagem para cima" disabled>↑</button><button type="button" data-move="down" aria-label="Mover imagem para baixo" disabled>↓</button><button type="button" data-move="left" aria-label="Mover imagem para a esquerda" disabled>←</button><button type="button" data-move="right" aria-label="Mover imagem para a direita" disabled>→</button></div></fieldset></div>
       <div class="actions">
         <button id="auto" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></svg>Ajustar automaticamente</button>
         <button id="bg" disabled>Aplicar fundo branco</button>
         <button id="reset" disabled>Centralizar imagem</button>
       </div>
-      <div class="enhance-panel">
+      <details class="enhance-panel"><summary>Iluminação, contraste e nitidez</summary>
         <label class="enhance-heading" for="enhance"><input id="enhance" type="checkbox" disabled>Melhorar imagem</label>
         <p class="info">Ajuste suave de iluminação, contraste e nitidez, preservando sua aparência.</p>
         <label class="range-label" for="enhanceStrength">Intensidade <span class="range-value" id="enhanceVal">35%</span></label>
         <input id="enhanceStrength" type="range" min="0" max="100" value="35" step="5" disabled>
         <button type="button" id="compareEnhancement" aria-pressed="false" disabled>Ver sem ajustes</button>
         <p class="compare-hint" id="compareHint" hidden>Comparação sem ajustes. O download mantém a melhoria selecionada.</p>
-      </div>
+      </details>
       <div class="notice">Remoção automática de fundo. No primeiro uso, aguarde o download dos recursos. Confira o contorno antes de baixar.</div>
     </div></section>
 
     <aside aria-label="Resultado e download">
-      <h2 class="section-title"><span class="step">3</span> Sua foto pronta</h2><p class="section-subtitle">Confira os detalhes antes de baixar.</p>
+      <div class="panel-heading"><h2 class="section-title"><span class="step">3</span> Seu resultado</h2><p class="section-subtitle">Confira a foto antes de baixar.</p></div>
       <div class="preview-stage"><div class="preview-frame"><div class="preview-placeholder" aria-hidden="true"><span>3:4</span>Sua foto aqui</div><img class="preview" id="preview" alt="Prévia da foto ajustada"></div></div>
       <p class="specs"><span class="pill">JPG</span><span class="pill">600 × 800 px</span><span class="pill">Até 3 MB</span></p>
       <p class="info" id="details">600 × 800 pixels · proporção 3×4</p>
@@ -91,7 +84,7 @@
       <p class="quality-info">O arquivo é ajustado automaticamente para ficar abaixo de 3 MB.</p>
 
       <div class="downloadbar"><p class="mobile-download-status" id="mobileStatus" aria-hidden="true">Selecione uma foto para começar.</p><button class="primary" id="download" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>Baixar foto 3×4</button></div>
-      <p id="status" class="status" role="status" aria-live="polite">Selecione uma imagem para começar.</p>
+      <button type="button" id="newImage" class="new-image" disabled>Nova imagem</button><p id="status" class="status" role="status" aria-live="polite" aria-atomic="true">Selecione uma imagem para começar.</p>
     </aside>
   </div>
 
@@ -101,6 +94,6 @@
   </div></div>
 <footer class="footer"><span>Feito para simplificar sua próxima foto de cadastro.</span><span>Suas fotos são processadas localmente no navegador.</span></footer></main>
 
-<script src="app.js?v=24740b295efa" defer></script>
+<script src="app.js?v=39e9a67597e6" defer></script>
 </body>
 </html>

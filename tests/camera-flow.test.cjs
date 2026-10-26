@@ -16,6 +16,7 @@ function processingContext() {
   const c = {
     originalImg: null, processedCanvas: null, bgBusy: false, pendingAutoProcess: false,
     loadToken: 0, zoom: { value: 100 }, quality: { value: 90 }, zoomVal: {}, qVal: {},
+    syncPhotoUi() {}, preview: { removeAttribute() {} },
     statusEl: node('status'), document: { querySelector: node, getElementById: node },
     URL: { revokeObjectURL() {} }, queueMicrotask, setTimeout, clearTimeout, console,
     Image: class { set src(url) { this.url = url; queueMicrotask(() => this.onload()); } },
