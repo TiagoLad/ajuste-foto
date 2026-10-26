@@ -4,10 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Foto pronta · Ajustador 3×4</title>
+<meta name="description" content="Prepare sua foto 3×4 com fundo branco, ajuste o enquadramento e baixe em JPG. Processamento no seu dispositivo.">
+<meta name="theme-color" content="#00395f">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="site-header"><div class="header-inner"><div class="brand"><span class="brand-mark" aria-hidden="true">3:4</span><span>foto pronta<span class="brand-dot">.</span></span></div><span class="privacy-chip"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Processamento no seu dispositivo</span></div></header>
+<header class="site-header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="logo.svg" alt="foto pronta" width="198" height="45"></div><span class="privacy-chip"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>Processamento no seu dispositivo</span></div></header>
 <section class="processing-notice" id="processingNotice" aria-labelledby="processingTitle" hidden>
   <span class="processing-spinner" aria-hidden="true"></span>
   <div class="processing-content">
@@ -18,8 +23,20 @@
   </div>
 </section>
 <main class="wrap">
-  <div class="hero"><div><p class="eyebrow">Pronta para o seu próximo passo</p><h1>Sua foto 3×4,<br><span>simples assim.</span></h1><p class="muted">Da câmera ao cadastro em poucos passos. Ajuste sua foto, aplique o fundo branco e baixe o resultado.</p><div class="hero-meta"><span>Fundo branco</span><span>Enquadramento 3×4</span><span>Exportação em JPG</span></div></div><div class="hero-note"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="9" r="3"/><path d="M8 18v-1a4 4 0 0 1 8 0v1"/></svg><div><strong>Seu melhor enquadramento</strong>Um cuidado a menos no seu cadastro.</div></div></div>
-  <div class="panel cols">
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="hero-dot" aria-hidden="true"></span>Seu estúdio de foto 3×4</p>
+      <h1 id="heroTitle">Sua melhor foto.<br><span>Pronta para o cadastro.</span></h1>
+      <p class="muted">Uma foto bem enquadrada faz toda a diferença. Prepare a sua com fundo branco e ajustes naturais, direto no navegador.</p>
+      <div class="hero-meta"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Fundo branco</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Recorte 3×4</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Pronta em JPG</span></div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-orbit"></div>
+      <div class="art-photo"><span class="art-ratio">3:4</span><div class="art-person"><div class="art-head"></div><div class="art-body"></div></div><span class="art-corner corner-tl"></span><span class="art-corner corner-tr"></span><span class="art-corner corner-bl"></span><span class="art-corner corner-br"></span></div>
+      <div class="art-badge"><span class="art-check">✓</span><div><strong>Bom enquadramento</strong><span>Seu próximo passo começa aqui.</span></div></div>
+    </div>
+  </section>
+  <div class="workspace-heading"><div><p class="eyebrow">Do seu jeito, em poucos passos</p><h2>Vamos preparar sua foto?</h2></div><span class="workspace-format">3×4 <span>·</span> 600 × 800 px</span></div>  <div class="panel cols">
     <section aria-label="Escolha e edição da foto"><div class="source-controls">
       <h2 class="section-title"><span class="step">1</span> Comece por uma foto</h2><p class="section-subtitle">Selecione um arquivo ou use a câmera.</p>
       <label class="upload-drop" for="file"><span class="upload-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg></span><strong>Escolher uma foto</strong><small>JPG, PNG ou WebP</small><input class="upload" type="file" id="file" accept="image/jpeg,image/png,image/webp,image/*"></label><p class="file-name" id="fileName">Nenhum arquivo selecionado</p><div class="divider">ou tire uma foto agora</div>
