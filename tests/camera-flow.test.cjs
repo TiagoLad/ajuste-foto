@@ -3,8 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const script = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8')
-  .match(/<script>([\s\S]*?)<\/script>/)[1];
+const script = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
 const turn = () => new Promise(resolve => setImmediate(resolve));
 
 function processingContext() {
@@ -22,7 +21,7 @@ function processingContext() {
     Image: class { set src(url) { this.url = url; queueMicrotask(() => this.onload()); } },
     setStatus(message) { calls.push(['status', message]); },
     recenter() { calls.push(['render', c.processedCanvas]); },
-    fitFace() {}, findFace: async () => { calls.push(['face']); return null; },
+    updateEnhancementControls() {}, fitFace() {}, findFace: async () => { calls.push(['face']); return null; },
     createWhiteBackgroundVersion: async image => { calls.push(['background', image.url]); return { image }; },
   };
   vm.createContext(c);
@@ -97,27 +96,26 @@ test('camera capture waits for a frame and preserves aspect ratio and mirroring'
   assert.equal(loaded, 'blob:snapshot');
 });
 
-test('touch devices use the native camera file picker and desktops keep live capture', () => {
-  let opened = 0, stopped = 0, live = 0;
+test('both mobile and desktop open only the in-browser camera', () => {
+  let live = 0;
   const c = {
     navigator: { maxTouchPoints: 1 },
     window: { matchMedia: () => ({ matches: true }) },
-    cameraFile: { value: 'previous', click() { opened++; } },
-    stopCamera() { stopped++; }, startCamera() { live++; },
+    startCamera() { live++; },
     openCameraButton: { addEventListener() {} },
   };
   vm.createContext(c);
-  vm.runInContext(script.slice(script.indexOf('function useNativeCamera'), script.indexOf('const browserCameraButton')), c);
+  vm.runInContext(script.slice(script.indexOf('function isTouchDevice'), script.indexOf("document.querySelector('#closeCamera')")), c);
   c.openPhotoCamera();
-  assert.equal(opened, 1);
-  assert.equal(stopped, 1);
-  assert.equal(c.cameraFile.value, '');
   c.navigator.maxTouchPoints = 0;
   c.openPhotoCamera();
-  assert.equal(live, 1);
-  assert.equal(opened, 1);
+  assert.equal(live, 2);
+  assert.equal(script.includes("document.querySelector('#cameraFile')"), false);
+  assert.equal(htmlHasNativeCameraInput(), false);
 });
-
+function htmlHasNativeCameraInput() {
+  return fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8').includes('id="cameraFile"');
+}
 test('native camera files with missing MIME type enter the same image pipeline', () => {
   let selected, status;
   const c = {
@@ -125,6 +123,7 @@ test('native camera files with missing MIME type enter the same image pipeline',
     loadPhoto(url) { selected = url; },
     setStatus(message) { status = message; },
     URL: { createObjectURL: file => 'blob:' + file.name },
+    document: { querySelector: () => null },
   };
   vm.createContext(c);
   vm.runInContext(script.slice(script.indexOf('function loadSelectedPhoto'), script.indexOf("file.addEventListener('change'")), c);

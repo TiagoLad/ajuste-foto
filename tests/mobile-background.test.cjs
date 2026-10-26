@@ -3,13 +3,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const script = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8')
-  .match(/<script>([\s\S]*?)<\/script>/)[1];
+const script = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
 
 function setup(responses = ['done']) {
   const workers = [], revoked = [];
   const c = {
-    navigator: {}, useNativeCamera: () => true,
+    navigator: {}, isTouchDevice: () => true,
     window: { addEventListener() {} },
     backgroundCache: new WeakMap(),
     Blob: class {},
@@ -45,7 +44,7 @@ function setup(responses = ['done']) {
 test('touch devices and low-memory computers select the lightweight model', () => {
   const { c } = setup();
   assert(c.shouldUseLightweightBackground());
-  c.useNativeCamera = () => false;
+  c.isTouchDevice = () => false;
   c.navigator.deviceMemory = 4;
   assert(c.shouldUseLightweightBackground());
   c.navigator.deviceMemory = 8;
