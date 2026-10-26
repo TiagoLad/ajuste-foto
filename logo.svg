@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 282 64" role="img" aria-labelledby="title">
+  <title id="title">Foto pronta</title>
+  <defs><linearGradient id="blue" x2="1" y2="1"><stop stop-color="#0877af"/><stop offset="1" stop-color="#00395f"/></linearGradient></defs>
+  <rect width="64" height="64" rx="17" fill="url(#blue)"/>
+  <g fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 14h-7v9m25-9h7v9M16 41v9h9"/>
+    <circle cx="32" cy="27" r="6"/>
+    <path d="M22 43c0-10 20-10 20 0"/>
+    <path d="m38 48 5 5 11-13" stroke="#8de1ff" stroke-width="4"/>
+  </g>
+  <text x="80" y="42" fill="#12354f" font-family="Segoe UI, Arial, sans-serif" font-size="33" font-weight="700" letter-spacing="-1.4">foto pronta<tspan fill="#0877af">.</tspan></text>
+</svg>
